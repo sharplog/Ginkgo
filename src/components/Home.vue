@@ -85,13 +85,12 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'Main',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
+import {Component, Vue} from 'vue-property-decorator'
+
+@Component
+export default class Home extends Vue {
+  name: String = 'Content';
+  msg: String = 'Welcome to Your Vue.js App';
 }
 </script>
 

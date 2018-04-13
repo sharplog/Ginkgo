@@ -1,6 +1,5 @@
 <template>
   <div class="hello">
-    <img src="../assets/logo.png">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -85,13 +84,12 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'Main',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
+import {Component, Vue} from 'vue-property-decorator'
+
+@Component
+export default class AppHeader extends Vue {
+  name: String = 'AppHeader';
+  msg: String = 'Welcome to Your Vue.js App';
 }
 </script>
 
