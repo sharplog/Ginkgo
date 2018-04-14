@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div id="sider">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -109,4 +109,8 @@ li {
 a {
   color: #42b983;
 }
+#sider {
+  color: #ffffff;
+}
+
 </style>

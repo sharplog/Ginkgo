@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello" style="height: 620px">
     <img src="../assets/logo.png">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>

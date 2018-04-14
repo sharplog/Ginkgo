@@ -1,27 +1,25 @@
 <template>
-  <div id="app" class="layout">
+  <Layout>
+    <Header class="header">
+      <AppHeader/>
+    </Header>
     <Layout>
-      <Header>
-        <AppHeader/>
-      </Header>
+      <Sider>
+        <AppSider/>
+      </Sider>
       <Layout>
-        <Sider>
-          <AppSider/>
-        </Sider>
-        <Layout>
-          <Breadcrumb>
-          </Breadcrumb>
-          <Content>
-            <router-view/>
-          </Content>
-        </Layout>
+        <Breadcrumb>
+        </Breadcrumb>
+        <Content>
+          <router-view/>
+        </Content>
       </Layout>
-      <Footer class="layout-footer-center">
-        <AppFooter/>
-      </Footer>
     </Layout>
-  </div>
-</template>
+    <Footer class="layout-footer-center">
+      <AppFooter/>
+    </Footer>
+  </Layout>
+ </template>
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
@@ -43,11 +41,10 @@ export default class Business extends Vue {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.header {
+  text-align: left;
+}
+.layout-footer-center {
+  display: none;
 }
 </style>
