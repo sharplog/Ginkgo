@@ -1,6 +1,7 @@
 <template>
   <div id="header">
-    <h1>{{ msg }}</h1>
+    <img class="logo" :src="imgSrc">
+    <h1>{{ appName }}</h1>
   </div>
 </template>
 
@@ -9,8 +10,8 @@ import {Component, Vue} from 'vue-property-decorator'
 
 @Component
 export default class AppHeader extends Vue {
-  name: String = 'AppHeader';
-  msg: String = 'Vue.js App';
+  imgSrc: String = 'static/img/logo.png';
+  appName: String = 'Vue.js App';
 }
 </script>
 
@@ -18,5 +19,11 @@ export default class AppHeader extends Vue {
 <style scoped>
 #header {
   color: #ffffff;
+}
+.logo {
+  margin-top: 9px;
+  margin-right: 10px;
+  height: 46px;
+  float: left;
 }
 </style>

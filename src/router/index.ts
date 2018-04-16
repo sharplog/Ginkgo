@@ -9,11 +9,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: r => require.ensure([], () => r(require('@/components/' + 'Business' + '.vue')), 'Business'),
+      component: r => require.ensure([], () => r(require('@/components/Business.vue')), 'Business'),
       children: [
         {
           path: '',
-          component: r => require.ensure([], () => r(require('@/components/' + 'Home' + '.vue')), 'Home')
+          component: r => require.ensure([], () => r(require('@/components/Home.vue')), 'Home')
         }
       ]
     }
