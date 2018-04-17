@@ -3,6 +3,11 @@
     <img class="logo" :src="imgSrc">
 
     <div class="headright">
+      <Badge count="100" style="margin-right:20px;">
+        <router-link to="/profile">
+          <Icon type="android-notifications" size="24" style="margin-right:6px"></Icon>
+        </router-link>
+      </Badge>
       <Dropdown>
         <Avatar class="avatar">{{ avatarLetter }}</Avatar>
         <a href="javascript:void(0)">

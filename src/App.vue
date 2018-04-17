@@ -20,3 +20,6 @@ export default class App extends Vue {
   -moz-osx-font-smoothing: grayscale;
 }
 </style>
+<style lang="less">
+  @import './theme/index.less';
+</style>
