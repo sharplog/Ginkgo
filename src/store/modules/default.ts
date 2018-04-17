@@ -2,6 +2,8 @@ import * as types from '../mutation-types'
 
 // initial state
 const state: any = {
+  // 应用的一些设置，比如系统名称
+  app: {},
   // 字典数据
   dictionary: [],
   userinfo: {}
