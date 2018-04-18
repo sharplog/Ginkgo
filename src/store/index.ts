@@ -9,6 +9,8 @@ const getters = {
   dictionary: state => state.Default.dictionary,
   userinfo: state => state.Default.userinfo,
 
+  appName: state => state.Default.appConf.name,
+  userName: state => state.Default.userinfo.name,
   token: state => state.Default.appState.token
 }
 

@@ -11,7 +11,7 @@
       <Dropdown>
         <Avatar class="avatar">{{ avatarLetter }}</Avatar>
         <a href="javascript:void(0)">
-            {{ username }}
+            {{ userName }}
             <Icon type="arrow-down-b"></Icon>
         </a>
         <Dropdown-menu slot="list">
@@ -38,21 +38,16 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 @Component
 export default class AppHeader extends Vue {
   imgSrc: String = 'static/img/logo.png';
-
-  get username (): String {
-    return this.$store.getters.userinfo.username
-  }
-
-  get appName (): String {
-    return this.$store.getters.appConf.name
-  }
+  @Getter('appName') appName: String
+  @Getter('userName') userName: String
 
   get avatarLetter (): String {
-    return this.$store.getters.userinfo.username.substr(0, 1)
+    return this.userName.substr(0, 1)
   }
 
   logout () {

@@ -10,7 +10,7 @@ const state: any = {
 
   // 字典数据
   dictionary: [],
-  userinfo: { username: '王小二' }
+  userinfo: { name: '王小二' }
 }
 
 // getters
