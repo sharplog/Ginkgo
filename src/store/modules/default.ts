@@ -2,8 +2,12 @@ import * as types from '../mutation-types'
 
 // initial state
 const state: any = {
-  // 应用的一些设置，比如系统名称
-  app: { name: 'Vue框架工程' },
+  // 应用的一些配置，比如系统名称
+  appConf: {},
+
+  // 应用的状态数据
+  appState: {},
+
   // 字典数据
   dictionary: [],
   userinfo: { username: '王小二' }
@@ -14,14 +18,23 @@ const getters: any = {}
 
 // mutations
 const mutations: any = {
+  [types.APPCONF] (state, data) {
+    state.appConf = data
+  },
   [types.DICTIONARY] (state, data) {
     state.dictionary = data
   },
   [types.USERINFO] (state, data) {
     state.userinfo = data
+  },
+  [types.TOKEN] (state, data) {
+    state.appState.token = data
+  },
+  [types.NOTICENUM] (state, data) {
+    state.appState.noticeNum = data
   }
-
 }
+
 // actions
 const actions: any = {
   [types.DICTIONARY] (context) {

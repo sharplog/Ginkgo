@@ -10,6 +10,15 @@ import {Component, Vue} from 'vue-property-decorator'
 @Component({})
 
 export default class App extends Vue {
+  mounted () {
+    let _this: any = this
+
+    // 初始化APP配置
+    _this.$service.http.get('/static/conf/app.conf.json').then(({data}) => {
+      _this.$store.commit('appConf', data)
+      _this.$service.setBaseUrl(data.baseURL)
+    })
+  }
 }
 </script>
 

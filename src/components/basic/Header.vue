@@ -4,7 +4,7 @@
 
     <div class="headright">
       <Badge count="100" style="margin-right:20px;">
-        <router-link to="/profile">
+        <router-link to="/message">
           <Icon type="android-notifications" size="24" style="margin-right:6px"></Icon>
         </router-link>
       </Badge>
@@ -48,7 +48,7 @@ export default class AppHeader extends Vue {
   }
 
   get appName (): String {
-    return this.$store.getters.app.name
+    return this.$store.getters.appConf.name
   }
 
   get avatarLetter (): String {

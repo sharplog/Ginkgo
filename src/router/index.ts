@@ -20,6 +20,10 @@ export default new Router({
         {
           path: 'profile',
           component: r => require.ensure([], () => r(require('@/components/Profile.vue')), 'Profile')
+        },
+        {
+          path: 'message',
+          component: r => require.ensure([], () => r(require('@/components/Message.vue')), 'Message')
         }
       ]
     }

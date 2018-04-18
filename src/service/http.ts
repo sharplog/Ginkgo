@@ -1,14 +1,6 @@
 import http from 'axios'
 
 // config http
-let baseUrl = ''
-if (process.env.NODE_ENV === 'development') {
-  baseUrl = 'http://...'
-} else if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'http://...'
-}
-http.defaults.baseURL = baseUrl
-
 // http.defaults.timeout = 2500
 http.defaults.headers.post['Content-Type'] = 'application/json'
 // cache-control: "max-age=0, private, must-revalidate"
