@@ -6,12 +6,12 @@ Vue.use(Vuex)
 
 const getters = {
   appConf: state => state.Default.appConf,
+  appState: state => state.Default.appState,
   dictionary: state => state.Default.dictionary,
   userinfo: state => state.Default.userinfo,
 
   appName: state => state.Default.appConf.name,
-  userName: state => state.Default.userinfo.name,
-  token: state => state.Default.appState.token
+  userName: state => state.Default.userinfo.name
 }
 
 export default new Vuex.Store({

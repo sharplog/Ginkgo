@@ -27,9 +27,6 @@ const mutations: any = {
   [types.USERINFO] (state, data) {
     state.userinfo = data
   },
-  [types.TOKEN] (state, data) {
-    state.appState.token = data
-  },
   [types.NOTICENUM] (state, data) {
     state.appState.noticeNum = data
   }

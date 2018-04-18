@@ -51,6 +51,7 @@ export default class AppHeader extends Vue {
   }
 
   logout () {
+    sessionStorage.removeItem('accessToken')
   }
 }
 </script>
