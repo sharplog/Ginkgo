@@ -3,7 +3,7 @@
     <img class="logo" :src="imgSrc">
 
     <div class="headright">
-      <badge count="100" style="margin-right:20px;">
+      <badge count="100" style="margin-right:30px;">
         <router-link to="/message">
           <icon type="android-notifications" size="24" style="margin-right:6px"></icon>
         </router-link>
@@ -23,10 +23,8 @@
           </dropdown-item>
           <dropdown-item >
             <a href="" @click="logout">
-              <p>
                 <icon type="power"></icon>
                 <span>退出</span>
-              </p>
             </a>
           </dropdown-item>
         </dropdown-menu>
