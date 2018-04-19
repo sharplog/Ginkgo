@@ -6,13 +6,18 @@
 
 import http from './http'
 
-// 有的请求需要用户认证，视情况而定
+// 在header中添加token
 const addAuth = function () {
   let config: any = {}
   config.headers = {
-    // TODO 怎么认证？添加Token？
+    Authorization: sessionStorage.getItem('accessToken')
   }
   return config
+}
+
+const handleError = (error, fail) => {
+  if (fail) { fail(error) }
+  console.log(error)
 }
 
 class Service {
@@ -21,54 +26,26 @@ class Service {
 
   get (url, success, fail) {
     return this.http.get(this.baseUrl + url, addAuth())
-      .then(function (res) {
-        success(res)
-      })
-      .catch(function (error) {
-        if (fail) {
-          fail(error)
-        }
-        console.log(error)
-      })
+      .then(res => success(res))
+      .catch(error => handleError(error, fail))
   }
 
   post (url, data, success, fail) {
     return this.http.post(this.baseUrl + url,data, addAuth())
-      .then(function (res) {
-        success(res)
-      })
-      .catch(function (error) {
-        if (fail) {
-          fail(error)
-        }
-        console.log(error)
-      })
+      .then(res => success(res))
+      .catch(error => handleError(error, fail))
   }
 
   put (url, data, success, fail) {
     return this.http.put(this.baseUrl + url,data, addAuth())
-      .then(function (res) {
-        success(res)
-      })
-      .catch(function (error) {
-        if (fail) {
-          fail(error)
-        }
-        console.log(error)
-      })
+      .then(res => success(res))
+      .catch(error => handleError(error, fail))
   }
 
   delete (url, success, fail) {
     return this.http.delete(this.baseUrl + url, addAuth())
-      .then(function (res) {
-        success(res)
-      })
-      .catch(function (error) {
-        if (fail) {
-          fail(error)
-        }
-        console.log(error)
-      })
+      .then(res => success(res))
+      .catch(error => handleError(error, fail))
   }
 
   setBaseUrl (url) { this.baseUrl = url }
