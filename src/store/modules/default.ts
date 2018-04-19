@@ -29,6 +29,9 @@ const mutations: any = {
   },
   [types.NOTICENUM] (state, data) {
     state.appState.noticeNum = data
+  },
+  [types.BEFORELOGIN] (state, data) {
+    state.appState.beforeLogin = data
   }
 }
 

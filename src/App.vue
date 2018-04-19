@@ -10,7 +10,7 @@ import {Component, Vue} from 'vue-property-decorator'
 @Component({})
 
 export default class App extends Vue {
-  mounted () {
+  created () {
     let _this: any = this
 
     // 初始化APP配置

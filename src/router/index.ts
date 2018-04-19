@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Config from '../config.js'
+import vuex from '../store'
 
 declare let require
 
 Vue.use(Router)
 
+const store = vuex
 const config = Config
 const loginURL = '/login'
 const homeURL = '/'
@@ -51,10 +53,10 @@ router.beforeEach((to, from, next) => {
     if (sessionStorage.getItem('accessToken') ||
       // 两种避免验证的方式
       to.meta.needAuth === false || config.whiteList.test(to.path)) {
-      debugger
       next()
     } else {
-      next({ path: '/login' })
+      store.commit('beforeLogin', to.path)
+      next({ path: loginURL })
     }
   }
 })
