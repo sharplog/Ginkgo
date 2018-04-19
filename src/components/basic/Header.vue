@@ -3,34 +3,34 @@
     <img class="logo" :src="imgSrc">
 
     <div class="headright">
-      <Badge count="100" style="margin-right:20px;">
+      <badge count="100" style="margin-right:20px;">
         <router-link to="/message">
-          <Icon type="android-notifications" size="24" style="margin-right:6px"></Icon>
+          <icon type="android-notifications" size="24" style="margin-right:6px"></icon>
         </router-link>
-      </Badge>
-      <Dropdown>
-        <Avatar class="avatar">{{ avatarLetter }}</Avatar>
+      </badge>
+      <dropdown>
+        <avatar class="avatar">{{ avatarLetter }}</avatar>
         <a href="javascript:void(0)">
             {{ userName }}
-            <Icon type="arrow-down-b"></Icon>
+            <icon type="arrow-down-b"></icon>
         </a>
-        <Dropdown-menu slot="list">
-          <Dropdown-item>
+        <dropdown-menu slot="list">
+          <dropdown-item>
             <router-link to="/profile">
-              <Icon type="android-contact"></Icon>
+              <icon type="android-contact"></icon>
               <span> 个人信息</span>
             </router-link>
-          </Dropdown-item>
-          <Dropdown-item >
+          </dropdown-item>
+          <dropdown-item >
             <a href="" @click="logout">
               <p>
-                <Icon type="power"></Icon>
+                <icon type="power"></icon>
                 <span>退出</span>
               </p>
             </a>
-          </Dropdown-item>
-        </Dropdown-menu>
-      </Dropdown>
+          </dropdown-item>
+        </dropdown-menu>
+      </dropdown>
     </div>
     <h1>{{ appName }}</h1>
   </div>

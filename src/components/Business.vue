@@ -1,24 +1,24 @@
 <template>
-  <Layout>
-    <Header class="header">
-      <AppHeader/>
-    </Header>
-    <Layout>
-      <Sider>
-        <AppSider/>
-      </Sider>
-      <Layout>
-        <Breadcrumb>
-        </Breadcrumb>
-        <Content>
+  <layout>
+    <i-header class="header">
+      <app-header/>
+    </i-header>
+    <layout>
+      <sider>
+        <app-sider/>
+      </sider>
+      <layout>
+        <breadcrumb>
+        </breadcrumb>
+        <i-content>
           <router-view/>
-        </Content>
-      </Layout>
-    </Layout>
-    <Footer class="layout-footer-center">
-      <AppFooter/>
-    </Footer>
-  </Layout>
+        </i-content>
+      </layout>
+    </layout>
+    <i-footer class="layout-footer-center">
+      <app-footer/>
+    </i-footer>
+  </layout>
  </template>
 
 <script lang="ts">
@@ -30,9 +30,9 @@ import AppSider from './basic/Sider.vue'
 
 @Component({
   components: {
-    AppHeader,
-    AppFooter,
-    AppSider
+    'app-header': AppHeader,
+    'app-footer': AppFooter,
+    'app-sider': AppSider
   }
 })
 
