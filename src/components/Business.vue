@@ -27,6 +27,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import AppHeader from './basic/Header.vue'
 import AppFooter from './basic/Footer.vue'
 import AppSider from './basic/Sider.vue'
+import * as types from '../store/mutation-types'
 
 @Component({
   components: {
@@ -37,6 +38,27 @@ import AppSider from './basic/Sider.vue'
 })
 
 export default class Business extends Vue {
+  created () {
+    let _this: any = this
+
+    // 如果已经登录，加载有关数据：个人信息、菜单、权限、字典
+    console.log('init personal data')
+    _this.$service.get('/userinfo.json', ({data}) => {
+      _this.$store.commit(types.USERINFO, data)
+    })
+    _this.$service.get('/topMenu.json', ({data}) => {
+      _this.$store.commit(types.TOPMENU, data)
+    })
+    _this.$service.get('/sideMenu.json', ({data}) => {
+      _this.$store.commit(types.SIDEMENU, data)
+    })
+    _this.$service.get('/permission.json', ({data}) => {
+      _this.$store.commit(types.PERMISSION, data)
+    })
+    _this.$service.get('/dictionary.json', ({data}) => {
+      _this.$store.commit(types.DICTIONARY, data)
+    })
+  }
 }
 </script>
 

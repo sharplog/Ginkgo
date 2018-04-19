@@ -8,9 +8,19 @@ const state: any = {
   // 应用的状态数据
   appState: {},
 
+  // 顶部菜单，位于Header中
+  topMenu: {},
+
+  // 左侧菜单，位于Sider中
+  sideMenu: {},
+
+  // 权限列表
+  permission: [],
+
   // 字典数据
   dictionary: [],
-  userinfo: { name: '王小二' }
+
+  userinfo: {}
 }
 
 // getters
@@ -20,6 +30,15 @@ const getters: any = {}
 const mutations: any = {
   [types.APPCONF] (state, data) {
     state.appConf = data
+  },
+  [types.TOPMENU] (state, data) {
+    state.topMenu = data
+  },
+  [types.SIDEMENU] (state, data) {
+    state.sideMenu = data
+  },
+  [types.PERMISSION] (state, data) {
+    state.permission = data
   },
   [types.DICTIONARY] (state, data) {
     state.dictionary = data

@@ -37,6 +37,12 @@ let router: Router = new Router({
     {
       path: loginURL,
       component: r => require.ensure([], () => r(require('@/components/Login.vue')), 'Login')
+    },
+    {
+      path: '/about',
+      component: r => require.ensure([], () => r(require('@/components/About.vue')), 'About'),
+      // 不需要登录验证
+      meta: { needAuth: false }
     }
   ]
 })
@@ -59,6 +65,11 @@ router.beforeEach((to, from, next) => {
       next({ path: loginURL })
     }
   }
+})
+
+// 基于菜单做url的访问权限验证
+router.beforeEach((to, from, next) => {
+  next()
 })
 
 export default router

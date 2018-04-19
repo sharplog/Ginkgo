@@ -45,7 +45,7 @@ export default class AppHeader extends Vue {
   @Getter('userName') userName: String
 
   get avatarLetter (): String {
-    return this.userName.substr(0, 1)
+    return this.userName ? this.userName.substr(0, 1) : ''
   }
 
   logout () {
@@ -74,7 +74,6 @@ export default class AppHeader extends Vue {
 .headright a span{
   color: #666666;
 }
-
 .avatar {
   background-color: #2196f3;
 }

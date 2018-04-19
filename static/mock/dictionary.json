@@ -1,0 +1,12 @@
+{
+  "dict1": [
+    {"name": "item1",
+      "code": "code1"
+    },
+    {"name": "item2",
+      "code": "code2"
+    }
+  ],
+  "dict2": [
+  ]
+}

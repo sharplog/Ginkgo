@@ -11,6 +11,7 @@ const getters = {
   userinfo: state => state.Default.userinfo,
 
   appName: state => state.Default.appConf.name,
+  appVendor: state => state.Default.appConf.vendor,
   userName: state => state.Default.userinfo.name
 }
 
