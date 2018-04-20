@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
       to.meta.needAuth === false || config.whiteList.test(to.path)) {
       next()
     } else {
-      store.commit('beforeLogin', to.path)
+      sessionStorage.setItem('beforeLogin', to.path)
       next({ path: loginURL })
     }
   }

@@ -55,9 +55,9 @@ export default class Login extends Vue {
     _this.$service.get('/token.json', ({data}) => {
       sessionStorage.setItem('accessToken', data.token)
 
-      let url = _this.$store.getters.appState.beforeLogin
+      let url = sessionStorage.getItem('beforeLogin')
       if (url) {
-        _this.$store.commit('beforeLogin', '')
+        sessionStorage.setItem('beforeLogin', '')
         _this.$router.push(url)
       } else {
         _this.$router.push('/')
