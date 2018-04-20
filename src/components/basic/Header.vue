@@ -3,7 +3,7 @@
     <img class="logo" :src="imgSrc">
     <h1 class="title">{{ appName }}</h1>
 
-    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelect">
+    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelect" v-if="true">
         <menu-item name="/message">
             <icon type="ios-paper"></icon>
             内容管理
@@ -76,15 +76,20 @@ export default class AppHeader extends Vue {
   imgSrc: String = 'static/img/logo.png';
   @Getter('appName') appName: String
   @Getter('userName') userName: String
-  @Getter('noticeNum') noticeNum: number
 
   get avatarLetter (): String {
     return this.userName ? this.userName.charAt(0) : ''
   }
 
+  get noticeNum (): String {
+    let num = this.$store.getters.noticeNum
+    return num === 0 ? '' : num
+  }
+
   onSelect (name) {
+    let _this: any = this
     if (name.charAt(0) !== '*') {
-      this.$router.push(name)
+      _this.$router.push(name)
     }
   }
 

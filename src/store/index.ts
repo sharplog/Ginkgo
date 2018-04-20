@@ -15,7 +15,7 @@ const getters = {
   appName: state => state.Default.appConf.name,
   appVendor: state => state.Default.appConf.vendor,
   userName: state => state.Default.userinfo.name,
-  noticeNum: state => state.Default.appState.noticeNum
+  noticeNum: state => state.Default.noticeNum
 }
 
 export default new Vuex.Store({

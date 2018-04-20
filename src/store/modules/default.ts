@@ -20,7 +20,9 @@ const state: any = {
   // 字典数据
   dictionary: [],
 
-  userinfo: {}
+  userinfo: {},
+
+  noticeNum: 0
 }
 
 // getters
@@ -47,7 +49,7 @@ const mutations: any = {
     state.userinfo = data
   },
   [types.NOTICENUM] (state, data) {
-    state.appState.noticeNum = data
+    state.noticeNum = data
   },
   [types.BEFORELOGIN] (state, data) {
     state.appState.beforeLogin = data
