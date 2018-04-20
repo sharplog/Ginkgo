@@ -41,7 +41,7 @@ export default class Business extends Vue {
   created () {
     let _this: any = this
 
-    // 如果已经登录，加载有关数据：个人信息、菜单、权限、字典
+    // 如果已经登录，加载有关数据：个人信息、菜单、权限、字典、消息数
     console.log('init personal data')
     _this.$service.get('/userinfo.json', ({data}) => {
       _this.$store.commit(types.USERINFO, data)
@@ -57,6 +57,9 @@ export default class Business extends Vue {
     })
     _this.$service.get('/dictionary.json', ({data}) => {
       _this.$store.commit(types.DICTIONARY, data)
+    })
+    _this.$service.get('/noticeNum.json', ({data}) => {
+      _this.$store.commit(types.NOTICENUM, data)
     })
   }
 }

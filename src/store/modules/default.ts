@@ -9,10 +9,10 @@ const state: any = {
   appState: {},
 
   // 顶部菜单，位于Header中
-  topMenu: {},
+  topMenu: [],
 
   // 左侧菜单，位于Sider中
-  sideMenu: {},
+  sideMenu: [],
 
   // 权限列表
   permission: [],

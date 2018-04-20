@@ -1,3 +1,23 @@
-{
-  "name": "top menu"
-}
+[
+  {
+    "name": "数据管理",
+    "icon": "ios-paper",
+    "url": "/message"
+  },
+  {
+    "name": "统计分析",
+    "icon": "stats-bars",
+    "submenu": [
+      {
+        "name": "月度统计",
+        "icon": "settings",
+        "url": "/profile"
+      },
+      {
+        "name": "年度统计",
+        "icon": "ios-people",
+        "url": "/message"
+      }
+    ]
+  }
+]

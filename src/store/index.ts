@@ -9,10 +9,13 @@ const getters = {
   appState: state => state.Default.appState,
   dictionary: state => state.Default.dictionary,
   userinfo: state => state.Default.userinfo,
+  topMenu: state => state.Default.topMenu,
+  sideMenu: state => state.Default.sideMenu,
 
   appName: state => state.Default.appConf.name,
   appVendor: state => state.Default.appConf.vendor,
-  userName: state => state.Default.userinfo.name
+  userName: state => state.Default.userinfo.name,
+  noticeNum: state => state.Default.appState.noticeNum
 }
 
 export default new Vuex.Store({

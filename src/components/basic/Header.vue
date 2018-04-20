@@ -1,9 +1,39 @@
 <template>
   <div id="header">
     <img class="logo" :src="imgSrc">
+    <h1 class="title">{{ appName }}</h1>
 
-    <div class="headright">
-      <badge count="100" style="margin-right:30px;">
+    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelect">
+        <menu-item name="/message">
+            <icon type="ios-paper"></icon>
+            内容管理
+        </menu-item>
+        <menu-item name="*2">
+            <icon type="ios-people"></icon>
+            用户管理
+        </menu-item>
+        <submenu name="*3">
+            <template slot="title">
+                <icon type="stats-bars"></icon>
+                统计分析
+            </template>
+            <menu-item name="/message">
+                <icon type="ios-paper"></icon>
+                新增和启动
+            </menu-item>
+            <menu-item name="*3-2">活跃分析</menu-item>
+            <menu-item name="*3-3">时段分析</menu-item>
+            <menu-item name="*3-4">用户留存</menu-item>
+            <menu-item name="*3-5">流失用户</menu-item>
+        </submenu>
+        <menu-item name="*4">
+            <icon type="settings"></icon>
+            综合设置
+        </menu-item>
+    </i-menu>
+
+    <div class="head-right">
+      <badge :count="noticeNum" style="margin-right:30px;">
         <router-link to="/message">
           <icon type="android-notifications" size="24" style="margin-right:6px"></icon>
         </router-link>
@@ -17,20 +47,23 @@
         <dropdown-menu slot="list">
           <dropdown-item>
             <router-link to="/profile">
-              <icon type="android-contact"></icon>
-              <span> 个人信息</span>
+              <p  class="dropdown-item-p">
+                <icon type="android-contact"></icon>
+                <span> 个人信息</span>
+              </p>
             </router-link>
           </dropdown-item>
           <dropdown-item >
             <a href="" @click="logout">
+              <p  class="dropdown-item-p">
                 <icon type="power"></icon>
                 <span>退出</span>
+              </p>
             </a>
           </dropdown-item>
         </dropdown-menu>
       </dropdown>
     </div>
-    <h1>{{ appName }}</h1>
   </div>
 </template>
 
@@ -43,9 +76,16 @@ export default class AppHeader extends Vue {
   imgSrc: String = 'static/img/logo.png';
   @Getter('appName') appName: String
   @Getter('userName') userName: String
+  @Getter('noticeNum') noticeNum: number
 
   get avatarLetter (): String {
-    return this.userName ? this.userName.substr(0, 1) : ''
+    return this.userName ? this.userName.charAt(0) : ''
+  }
+
+  onSelect (name) {
+    if (name.charAt(0) !== '*') {
+      this.$router.push(name)
+    }
   }
 
   logout () {
@@ -60,21 +100,33 @@ export default class AppHeader extends Vue {
 #header {
   color: #ffffff;
 }
+.title {
+  float: left;
+}
 .logo {
   margin-top: 9px;
   margin-right: 10px;
   height: 46px;
   float: left;
 }
-.headright {
+.top-menu {
+  float: left;
+  background: transparent;
+  margin-left: 50px;
+}
+.head-right {
   float: right;
   line-height: 24px;
   margin-top: 20px;
 }
-.headright a span{
+.head-right a span{
   color: #666666;
 }
 .avatar {
   background-color: #2196f3;
+}
+.dropdown-item-p {
+  display: block;
+  width:100%;
 }
 </style>
