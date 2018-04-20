@@ -4,7 +4,7 @@
       <app-header/>
     </i-header>
     <layout>
-      <sider>
+      <sider collapsible :collapsed-width="collapsedWidth" v-model="isCollapsed" @on-collapse="onCollapse">
         <app-sider/>
       </sider>
       <layout>
@@ -38,6 +38,16 @@ import * as types from '../store/mutation-types'
 })
 
 export default class Business extends Vue {
+  collapsedWidth: number = 68
+  isCollapsed: boolean = false
+
+  // 供AppSider那边设置样式class
+  onCollapse (collapsed) {
+    let _this: any = this
+
+    _this.$store.commit(types.SIDERCOLLAPSED, collapsed)
+  }
+
   created () {
     let _this: any = this
 

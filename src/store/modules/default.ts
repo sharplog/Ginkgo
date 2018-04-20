@@ -22,7 +22,9 @@ const state: any = {
 
   userinfo: {},
 
-  noticeNum: 0
+  noticeNum: 0,
+
+  siderCollapsed: false
 }
 
 // getters
@@ -50,6 +52,9 @@ const mutations: any = {
   },
   [types.NOTICENUM] (state, data) {
     state.noticeNum = data
+  },
+  [types.SIDERCOLLAPSED] (state, data) {
+    state.siderCollapsed = data
   }
 }
 

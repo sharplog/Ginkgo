@@ -1,29 +1,29 @@
 <template>
   <div id="sider">
-    <i-menu theme="dark" class="side-menu" @on-select="onSelect" v-if="sideMenu.length !== 0" width="auto">
+    <i-menu theme="dark" :class="menuitemClasses" @on-select="onSelect" v-if="sideMenu.length !== 0" width="auto">
       <template v-for="item in sideMenu">
         <menu-item :name="item.url" v-if="!item.submenu" :key="item.key">
             <icon :type="item.icon" v-if="item.icon"></icon>
-            {{ item.name }}
+            <span>{{ item.name }}</span>
         </menu-item>
         <submenu :name="item.url" v-if="item.submenu" :key="item.key">
             <template slot="title">
                 <icon :type="item.icon" v-if="item.icon"></icon>
-                {{ item.name }}
+                <span>{{ item.name }}</span>
             </template>
             <template v-for="subItem in item.submenu">
               <menu-item :name="subItem.url" v-if="!subItem.submenu" :key="subItem.key">
                   <icon :type="subItem.icon" v-if="subItem.icon"></icon>
-                  {{ subItem.name }}
+                  <span>{{ subItem.name }}</span>
               </menu-item>
               <submenu :name="subItem.url" v-if="subItem.submenu" :key="subItem.key">
                 <template slot="title">
                     <icon :type="subItem.icon" v-if="subItem.icon"></icon>
-                    {{ subItem.name }}
+                    <span>{{ subItem.name }}</span>
                 </template>
                   <menu-item v-for="subItem2 in subItem.submenu" :name="subItem2.url" :key="subItem2.key">
                       <icon :type="subItem2.icon" v-if="subItem2.icon"></icon>
-                      {{ subItem2.name }}
+                      <span>{{ subItem2.name }}</span>
                   </menu-item>
               </submenu>
             </template>
@@ -35,9 +35,18 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
 @Component
 export default class AppSider extends Vue {
+  @Getter('siderCollapsed') siderCollapsed: boolean
+
+  get menuitemClasses (): Array<String> {
+    return [
+      'menu-item',
+      this.siderCollapsed ? 'collapsed-menu' : ''
+    ]
+  }
   get sideMenu (): Array<any> {
     let key = 0
 
@@ -83,7 +92,33 @@ export default class AppSider extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.side-menu {
+.menu-item {
   background: transparent;
 }
+.menu-item span{
+  display: inline-block;
+  overflow: hidden;
+  width: 69px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  transition: width .2s ease .2s;
+}
+.menu-item i{
+  transform: translateX(0px);
+  transition: font-size .2s ease, transform .2s ease;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.collapsed-menu span{
+  width: 0px;
+  transition: width .2s ease;
+}
+.collapsed-menu i{
+  transform: translateX(3px);
+  transition: font-size .2s ease .2s, transform .2s ease .2s;
+  vertical-align: middle;
+  font-size: 18px;
+}
+
 </style>
