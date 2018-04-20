@@ -1,85 +1,35 @@
 <template>
   <div id="sider">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+    <i-menu theme="dark" class="side-menu" @on-select="onSelect" v-if="sideMenu.length !== 0" width="auto">
+      <template v-for="item in sideMenu">
+        <menu-item :name="item.url" v-if="!item.submenu" :key="item.key">
+            <icon :type="item.icon" v-if="item.icon"></icon>
+            {{ item.name }}
+        </menu-item>
+        <submenu :name="item.url" v-if="item.submenu" :key="item.key">
+            <template slot="title">
+                <icon :type="item.icon" v-if="item.icon"></icon>
+                {{ item.name }}
+            </template>
+            <template v-for="subItem in item.submenu">
+              <menu-item :name="subItem.url" v-if="!subItem.submenu" :key="subItem.key">
+                  <icon :type="subItem.icon" v-if="subItem.icon"></icon>
+                  {{ subItem.name }}
+              </menu-item>
+              <submenu :name="subItem.url" v-if="subItem.submenu" :key="subItem.key">
+                <template slot="title">
+                    <icon :type="subItem.icon" v-if="subItem.icon"></icon>
+                    {{ subItem.name }}
+                </template>
+                  <menu-item v-for="subItem2 in subItem.submenu" :name="subItem2.url" :key="subItem2.key">
+                      <icon :type="subItem2.icon" v-if="subItem2.icon"></icon>
+                      {{ subItem2.name }}
+                  </menu-item>
+              </submenu>
+            </template>
+        </submenu>
+      </template>
+    </i-menu>
   </div>
 </template>
 
@@ -88,29 +38,52 @@ import {Component, Vue} from 'vue-property-decorator'
 
 @Component
 export default class AppSider extends Vue {
-  name: String = 'AppSider';
-  msg: String = 'Welcome to Your Vue.js App';
+  get sideMenu (): Array<any> {
+    let key = 0
+
+    // 一级菜单
+    this.$store.getters.sideMenu.forEach((item, index) => {
+      item.key = ++key
+      if (!item.url) {
+        item.url = '*' + index
+      }
+
+      // 二级菜单
+      if (item.submenu) {
+        item.submenu.forEach((subitem, subindex) => {
+          subitem.key = ++key
+          if (!subitem.url) {
+            subitem.url = '*' + index + '-' + subindex
+          }
+
+          // 三级菜单
+          if (subitem.submenu) {
+            subitem.submenu.forEach((subitem2, subindex2) => {
+              subitem2.key = ++key
+              if (!subitem2.url) {
+                subitem2.url = '*' + index + '-' + subindex + '-' + subindex2
+              }
+            })
+          }
+        })
+      }
+    })
+
+    return this.$store.getters.sideMenu
+  }
+
+  onSelect (name) {
+    let _this: any = this
+    if (name.charAt(0) !== '*') {
+      _this.$router.push(name)
+    }
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
+.side-menu {
+  background: transparent;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-#sider {
-  color: #ffffff;
-}
-
 </style>

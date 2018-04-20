@@ -1,5 +1,5 @@
 {
-  "name": "Vue框架工程",
+  "name": "Vue应用框架工程",
   "baseURL": "http://localhost:8080/static/mock",
   "vendor": "sharplog@github.com"
 }

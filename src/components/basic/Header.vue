@@ -3,33 +3,23 @@
     <img class="logo" :src="imgSrc">
     <h1 class="title">{{ appName }}</h1>
 
-    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelect" v-if="true">
-        <menu-item name="/message">
-            <icon type="ios-paper"></icon>
-            内容管理
+    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelect" v-if="topMenu.length !== 0">
+      <template v-for="item in topMenu">
+        <menu-item :name="item.url" v-if="!item.submenu" :key="item.key">
+            <icon :type="item.icon" v-if="item.icon"></icon>
+            {{ item.name }}
         </menu-item>
-        <menu-item name="*2">
-            <icon type="ios-people"></icon>
-            用户管理
-        </menu-item>
-        <submenu name="*3">
+        <submenu :name="item.url" v-if="item.submenu" :key="item.key">
             <template slot="title">
-                <icon type="stats-bars"></icon>
-                统计分析
+                <icon :type="item.icon" v-if="item.icon"></icon>
+                {{ item.name }}
             </template>
-            <menu-item name="/message">
-                <icon type="ios-paper"></icon>
-                新增和启动
+            <menu-item v-for="subItem in item.submenu" :name="subItem.url" :key="subItem.key">
+                <icon :type="subItem.icon" v-if="subItem.icon"></icon>
+                {{ subItem.name }}
             </menu-item>
-            <menu-item name="*3-2">活跃分析</menu-item>
-            <menu-item name="*3-3">时段分析</menu-item>
-            <menu-item name="*3-4">用户留存</menu-item>
-            <menu-item name="*3-5">流失用户</menu-item>
         </submenu>
-        <menu-item name="*4">
-            <icon type="settings"></icon>
-            综合设置
-        </menu-item>
+      </template>
     </i-menu>
 
     <div class="head-right">
@@ -84,6 +74,28 @@ export default class AppHeader extends Vue {
   get noticeNum (): String {
     let num = this.$store.getters.noticeNum
     return num === 0 ? '' : num
+  }
+
+  get topMenu (): Array<any> {
+    let key = 0
+
+    this.$store.getters.topMenu.forEach((item, index) => {
+      item.key = ++key
+      if (!item.url) {
+        item.url = '*' + index
+      }
+
+      if (item.submenu) {
+        item.submenu.forEach((subitem, subindex) => {
+          subitem.key = ++key
+          if (!subitem.url) {
+            subitem.url = '*' + index + '-' + subindex
+          }
+        })
+      }
+    })
+
+    return this.$store.getters.topMenu
   }
 
   onSelect (name) {
