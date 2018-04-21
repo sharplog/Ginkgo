@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import iView from 'iview'
 import service from './service'
+import 'babel-polyfill'
 
 Vue.config.productionTip = false
 Vue.use(iView)

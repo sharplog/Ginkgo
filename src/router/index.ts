@@ -18,18 +18,23 @@ let router: Router = new Router({
   routes: [
     {
       path: '/',
+      redirect: '/home',
+      name: '首页',
       component: r => require.ensure([], () => r(require('@/components/Business.vue')), 'Business'),
       children: [
         {
-          path: '',
+          path: 'home',
+          name: '',
           component: r => require.ensure([], () => r(require('@/components/Home.vue')), 'Home')
         },
         {
           path: 'profile',
+          name: '个人信息',
           component: r => require.ensure([], () => r(require('@/components/Profile.vue')), 'Profile')
         },
         {
           path: 'message',
+          name: '消息通知',
           component: r => require.ensure([], () => r(require('@/components/Message.vue')), 'Message')
         }
       ]

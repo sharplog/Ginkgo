@@ -77,6 +77,7 @@ export default class Business extends Vue {
 <style>
 .header {
   text-align: left;
+  border-bottom: 1px solid #eeddee;
 }
 .layout-footer-center {
   display: none;
