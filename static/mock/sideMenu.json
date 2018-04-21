@@ -5,27 +5,37 @@
     "url": "/"
   },
   {
-    "name": "统计分析",
-    "icon": "stats-bars",
+    "name": "地图",
+    "icon": "map",
+    "url": "/map"
+  },
+  {
+    "name": "图表",
+    "icon": "pie-graph",
+    "url": "/chart"
+  },
+  {
+    "name": "菜单示例",
+    "icon": "android-menu",
     "submenu": [
       {
-        "name": "月度统计",
+        "name": "二级菜单1",
         "icon": "settings",
         "submenu": [
           {
-            "name": "年度统计2",
+            "name": "三级菜单1",
             "icon": "ios-people",
             "url": "/profile"
           },
           {
-            "name": "年度统计3",
+            "name": "三级菜单2",
             "icon": "ios-people",
             "url": "/bbb"
           }
         ]
       },
       {
-        "name": "年度统计",
+        "name": "二级菜单2",
         "icon": "ios-people",
         "url": "/about"
       }
@@ -50,6 +60,14 @@
       {
         "name": "权限管理",
         "url": "/permission"
+      },
+      {
+        "name": "字典管理",
+        "url": "/dictionary"
+      },
+      {
+        "name": "系统参数",
+        "url": "/configure"
       }
     ]
   }
