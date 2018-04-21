@@ -15,7 +15,7 @@
         </i-input>
       </form-item>
       <form-item class="loginButton">
-        <i-button type="primary" @click="handleSubmit()">登录</i-button>
+        <i-button style="width:100%" type="primary" @click="handleSubmit()">登录</i-button>
       </form-item>
     </i-form>
     <div class="footer">

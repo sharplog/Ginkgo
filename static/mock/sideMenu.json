@@ -30,5 +30,27 @@
         "url": "/about"
       }
     ]
+  },
+  {
+    "name": "系统管理",
+    "icon": "settings",
+    "submenu": [
+      {
+        "name": "组织管理",
+        "url": "/orgnization"
+      },
+      {
+        "name": "用户管理",
+        "url": "/user"
+      },
+      {
+        "name": "角色管理",
+        "url": "/role"
+      },
+      {
+        "name": "权限管理",
+        "url": "/permission"
+      }
+    ]
   }
 ]

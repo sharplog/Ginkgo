@@ -98,7 +98,7 @@ export default class AppSider extends Vue {
 .menu-item span{
   display: inline-block;
   overflow: hidden;
-  width: 69px;
+  width: 90px;
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: bottom;
@@ -115,10 +115,10 @@ export default class AppSider extends Vue {
   transition: width .2s ease;
 }
 .collapsed-menu i{
+  float: left;
   transform: translateX(3px);
   transition: font-size .2s ease .2s, transform .2s ease .2s;
   vertical-align: middle;
-  font-size: 18px;
 }
 
 </style>

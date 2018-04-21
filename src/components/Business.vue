@@ -4,7 +4,10 @@
       <app-header/>
     </i-header>
     <layout>
-      <sider collapsible :collapsed-width="collapsedWidth" v-model="isCollapsed" @on-collapse="onCollapse">
+      <sider ref="sider" hide-trigger collapsible :collapsed-width="collapsedWidth" v-model="isCollapsed" @on-collapse="onCollapse">
+        <div @click="collapsedSider" class="collapseDiv">
+          <Icon :class="rotateIcon" type="navicon-round" size="16"></Icon>
+        </div>
         <app-sider/>
       </sider>
       <layout>
@@ -38,8 +41,20 @@ import * as types from '../store/mutation-types'
 })
 
 export default class Business extends Vue {
-  collapsedWidth: number = 68
+  collapsedWidth: number = 64
   isCollapsed: boolean = false
+
+  get rotateIcon (): Array<String> {
+    return [
+      'menu-icon',
+      this.isCollapsed ? '' : 'rotate-icon'
+    ]
+  }
+
+  collapsedSider () {
+    let sider: any = this.$refs.sider
+    sider.toggleCollapse()
+  }
 
   // 供AppSider那边设置样式class
   onCollapse (collapsed) {
@@ -81,5 +96,20 @@ export default class Business extends Vue {
 }
 .layout-footer-center {
   display: none;
+}
+.menu-icon{
+  color: #aeb9c2;
+  margin-top: 6px;
+  transition: all .3s;
+}
+.rotate-icon{
+    transform: rotate(-90deg);
+}
+.collapseDiv {
+  width:100%;
+  text-align:center;
+  background:#42485b;
+  height: 30px;
+  cursor: pointer;
 }
 </style>
