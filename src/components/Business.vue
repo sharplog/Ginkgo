@@ -4,16 +4,17 @@
       <app-header/>
     </i-header>
     <layout>
-      <sider ref="sider" hide-trigger collapsible :collapsed-width="collapsedWidth" v-model="isCollapsed" @on-collapse="onCollapse">
+      <sider ref="sider" hide-trigger collapsible :collapsed-width="collapsedWidth" v-model="isCollapsed" @on-collapse="onCollapse"
+          :style="siderStyle">
         <div @click="collapsedSider" class="collapseDiv">
           <Icon :class="rotateIcon" type="navicon-round" size="16"></Icon>
         </div>
         <app-sider/>
       </sider>
       <layout>
-        <breadcrumb>
+        <breadcrumb style="height:30px">
         </breadcrumb>
-        <i-content>
+        <i-content :style="contentStyle">
           <router-view/>
         </i-content>
       </layout>
@@ -41,8 +42,13 @@ import * as types from '../store/mutation-types'
 })
 
 export default class Business extends Vue {
+  // 64px是header的高度
+  siderStyle: any = {height: 'calc(100vh - 64px)', overflow: 'auto'}
+  // 64px是header加breadcrumb的高度
+  contentStyle: any = {height: 'calc(100vh - 94px)', overflow: 'auto'}
   collapsedWidth: number = 64
   isCollapsed: boolean = false
+  headerHeight: String = '64px'
 
   get rotateIcon (): Array<String> {
     return [

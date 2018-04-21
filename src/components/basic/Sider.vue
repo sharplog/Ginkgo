@@ -1,6 +1,6 @@
 <template>
   <div id="sider">
-    <i-menu theme="dark" :class="menuitemClasses" @on-select="onSelect" v-if="sideMenu.length !== 0" width="auto">
+    <i-menu theme="dark" :class="menuitemClasses" @on-select="onSelect" v-if="sideMenu.length !== 0" width="auto" :accordion="accordion">
       <template v-for="item in sideMenu">
         <menu-item :name="item.url" v-if="!item.submenu" :key="item.key">
             <icon :type="item.icon" v-if="item.icon"></icon>
@@ -39,6 +39,7 @@ import { Getter } from 'vuex-class'
 
 @Component
 export default class AppSider extends Vue {
+  accordion: boolean = true
   @Getter('siderCollapsed') siderCollapsed: boolean
 
   get menuitemClasses (): Array<String> {
@@ -98,7 +99,7 @@ export default class AppSider extends Vue {
 .menu-item span{
   display: inline-block;
   overflow: hidden;
-  width: 90px;
+  width: 75px;
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: bottom;

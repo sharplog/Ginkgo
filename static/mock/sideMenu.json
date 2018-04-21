@@ -1,8 +1,8 @@
 [
   {
-    "name": "数据管理",
-    "icon": "ios-paper",
-    "url": "/message"
+    "name": "首页",
+    "icon": "home",
+    "url": "/"
   },
   {
     "name": "统计分析",
