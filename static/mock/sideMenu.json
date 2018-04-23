@@ -10,6 +10,11 @@
     "url": "/map"
   },
   {
+    "name": "室内图",
+    "icon": "map",
+    "url": "/indoor"
+  },
+  {
     "name": "图表",
     "icon": "pie-graph",
     "url": "/chart"
