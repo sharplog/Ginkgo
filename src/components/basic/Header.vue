@@ -107,6 +107,7 @@ export default class AppHeader extends Vue {
 
   logout () {
     sessionStorage.removeItem('accessToken')
+    console.log('logout')
     this.$router.push('/')
   }
 }

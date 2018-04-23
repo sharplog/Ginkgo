@@ -82,14 +82,14 @@ export default class Business extends Vue {
     _this.$service.get('/sideMenu.json', ({data}) => {
       _this.$store.commit(types.SIDEMENU, data)
     })
-    _this.$service.get('/permission.json', ({data}) => {
-      _this.$store.commit(types.PERMISSION, data)
-    })
     _this.$service.get('/dictionary.json', ({data}) => {
       _this.$store.commit(types.DICTIONARY, data)
     })
     _this.$service.get('/noticeNum.json', ({data}) => {
       _this.$store.commit(types.NOTICENUM, data)
+    })
+    _this.$service.get('/permission.json', ({data}) => {
+      sessionStorage.setItem('permission', JSON.stringify(data))
     })
   }
 }

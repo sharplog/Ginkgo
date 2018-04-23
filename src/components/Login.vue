@@ -55,13 +55,18 @@ export default class Login extends Vue {
     _this.$service.get('/token.json', ({data}) => {
       sessionStorage.setItem('accessToken', data.token)
 
-      let url = sessionStorage.getItem('beforeLogin')
-      if (url) {
-        sessionStorage.setItem('beforeLogin', '')
-        _this.$router.push(url)
-      } else {
-        _this.$router.push('/')
-      }
+      // 必须在login成功后取得权限，否则进不了其它页面
+      _this.$service.get('/permission.json', ({data}) => {
+        sessionStorage.setItem('permission', JSON.stringify(data))
+
+        let url = sessionStorage.getItem('beforeLogin')
+        if (url) {
+          sessionStorage.removeItem('beforeLogin')
+          _this.$router.push(url)
+        } else {
+          _this.$router.push('/')
+        }
+      })
     })
   }
 }
