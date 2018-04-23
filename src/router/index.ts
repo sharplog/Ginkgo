@@ -52,7 +52,14 @@ let router: Router = new Router({
   ]
 })
 
-router.beforeEach(ceptors.loginInterceptor)
-router.beforeEach(ceptors.permInterceptor)
+// 加载before拦截器
+for (let ceptor in ceptors.before) {
+  router.beforeEach(ceptors.before[ceptor])
+}
+
+// 加载after拦截器
+for (let ceptor in ceptors.after) {
+  router.afterEach(ceptors.after[ceptor])
+}
 
 export default router

@@ -23,44 +23,51 @@ const hasPerm = requiredPerm => {
   return false
 }
 
-// 登录验证
-export const loginInterceptor = (to, from, next) => {
-  if (to.path === loginURL) {
-    if (sessionStorage.getItem('accessToken')) {
-      next({ path: homeURL })
+// beforeEach拦截器
+export const before = {
+  // 登录验证
+  loginInterceptor: (to, from, next) => {
+    if (to.path === loginURL) {
+      if (sessionStorage.getItem('accessToken')) {
+        next({ path: homeURL })
+      } else {
+        next()
+      }
     } else {
-      next()
+      if (sessionStorage.getItem('accessToken') || !needLogin(to)) {
+        next()
+      } else {
+        sessionStorage.setItem('beforeLogin', to.path)
+        next({ path: loginURL })
+      }
     }
-  } else {
-    if (sessionStorage.getItem('accessToken') || !needLogin(to)) {
+  },
+
+  // 基于菜单做url的访问权限验证
+  permInterceptor: (to, from, next) => {
+    if (to.path === loginURL || !needLogin(to)) {
       next()
+      return
+    }
+
+    if (to.meta.hasSubPerm === true) { // 本url有更细的权限控制
+      if (hasPerm(to.fullPath)) {
+        next()
+        return
+      }
     } else {
-      sessionStorage.setItem('beforeLogin', to.path)
-      next({ path: loginURL })
+      if (hasPerm(to.path)) {
+        next()
+        return
+      }
     }
+
+    // 以恰当的形式给出提示
+    console.log('No permission!')
+    next({ path: '/no-permission' })
   }
 }
 
-// 基于菜单做url的访问权限验证
-export const permInterceptor = (to, from, next) => {
-  if (to.path === loginURL || !needLogin(to)) {
-    next()
-    return
-  }
-
-  if (to.meta.hasSubPerm === true) { // 本url有更细的权限控制
-    if (hasPerm(to.fullPath)) {
-      next()
-      return
-    }
-  } else {
-    if (hasPerm(to.path)) {
-      next()
-      return
-    }
-  }
-
-  // 以恰当的形式给出提示
-  console.log('No permission!')
-  next({ path: '/no-permission' })
+// afterEach拦截器
+export const after = {
 }
