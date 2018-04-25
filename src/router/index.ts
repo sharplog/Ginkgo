@@ -30,17 +30,38 @@ let router: Router = new Router({
           path: 'message',
           name: '消息通知',
           component: r => require.ensure([], () => r(require('@/components/Message.vue')), 'Message')
+        },
+        {
+          path: 'demo/map',
+          name: '地图示例',
+          component: r => require.ensure([], () => r(require('@/components/Demo/Map.vue')), 'Demo-Map')
+        },
+        {
+          path: 'demo/indoor',
+          name: '室内图示例',
+          component: r => require.ensure([], () => r(require('@/components/Demo/Indoor.vue')), 'Demo-Indoor')
+        },
+        {
+          path: 'demo/chart',
+          name: '图表示例',
+          component: r => require.ensure([], () => r(require('@/components/Demo/Chart.vue')), 'Demo-Chart')
         }
       ]
     },
     {
       path: '/login',
-      component: r => require.ensure([], () => r(require('@/components/Login.vue')), 'Login')
+      component: r => require.ensure([], () => r(require('@/components/Login.vue')), 'Login'),
+      // 不需要登录验证
+      meta: { needAuth: false }
+    },
+    {
+      path: '/logout',
+      component: r => require.ensure([], () => r(require('@/components/Logout.vue')), 'Logout'),
+      meta: { needAuth: false }
     },
     {
       path: '/about',
       component: r => require.ensure([], () => r(require('@/components/About.vue')), 'About'),
-      // 不需要登录验证
       meta: { needAuth: false }
     },
     {

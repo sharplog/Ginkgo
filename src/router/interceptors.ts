@@ -27,25 +27,17 @@ const hasPerm = requiredPerm => {
 export const before = {
   // 登录验证
   loginInterceptor: (to, from, next) => {
-    if (to.path === loginURL) {
-      if (sessionStorage.getItem('accessToken')) {
-        next({ path: homeURL })
-      } else {
-        next()
-      }
+    if (sessionStorage.getItem('accessToken') || !needLogin(to)) {
+      next()
     } else {
-      if (sessionStorage.getItem('accessToken') || !needLogin(to)) {
-        next()
-      } else {
-        sessionStorage.setItem('beforeLogin', to.path)
-        next({ path: loginURL })
-      }
+      sessionStorage.setItem('beforeLogin', to.path)
+      next({ path: loginURL })
     }
   },
 
   // 基于菜单做url的访问权限验证
   permInterceptor: (to, from, next) => {
-    if (to.path === loginURL || !needLogin(to)) {
+    if (!needLogin(to)) {
       next()
       return
     }

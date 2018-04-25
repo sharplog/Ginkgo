@@ -3,7 +3,7 @@
     <img class="logo" :src="imgSrc">
     <h1 class="title">{{ appName }}</h1>
 
-    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelect" v-if="topMenu.length !== 0">
+    <i-menu mode="horizontal" theme="dark" class="top-menu" @on-select="onSelectTopMenu" v-if="topMenu.length !== 0">
       <template v-for="item in topMenu">
         <menu-item :name="item.url" v-if="!item.submenu" :key="item.key">
             <icon :type="item.icon" v-if="item.icon"></icon>
@@ -28,28 +28,24 @@
           <icon type="android-notifications" size="24" style="margin-right:6px"></icon>
         </router-link>
       </badge>
-      <dropdown>
+      <dropdown @on-click="onClickDropdown">
         <avatar class="avatar">{{ avatarLetter }}</avatar>
         <a href="javascript:void(0)">
             {{ userName }}
             <icon type="arrow-down-b"></icon>
         </a>
         <dropdown-menu slot="list">
-          <dropdown-item>
-            <router-link to="/profile">
+          <dropdown-item name="/profile">
               <p  class="dropdown-item-p">
                 <icon type="android-contact"></icon>
                 <span> 个人信息</span>
               </p>
-            </router-link>
           </dropdown-item>
-          <dropdown-item >
-            <a href="" @click="logout">
+          <dropdown-item name="/logout">
               <p  class="dropdown-item-p">
                 <icon type="power"></icon>
                 <span>退出</span>
               </p>
-            </a>
           </dropdown-item>
         </dropdown-menu>
       </dropdown>
@@ -63,7 +59,7 @@ import { Getter } from 'vuex-class'
 
 @Component
 export default class AppHeader extends Vue {
-  imgSrc: String = 'static/img/logo.png';
+  imgSrc: String = '/static/img/logo.png';
   @Getter('appName') appName: String
   @Getter('userName') userName: String
 
@@ -82,6 +78,7 @@ export default class AppHeader extends Vue {
     this.$store.getters.topMenu.forEach((item, index) => {
       item.key = ++key
       if (!item.url) {
+        // 以‘*’打头表示不是url
         item.url = '*' + index
       }
 
@@ -98,17 +95,16 @@ export default class AppHeader extends Vue {
     return this.$store.getters.topMenu
   }
 
-  onSelect (name) {
+  onSelectTopMenu (name) {
     let _this: any = this
     if (name.charAt(0) !== '*') {
       _this.$router.push(name)
     }
   }
 
-  logout () {
-    sessionStorage.removeItem('accessToken')
-    console.log('logout')
-    this.$router.push('/')
+  onClickDropdown (name) {
+    let _this: any = this
+    _this.$router.push(name)
   }
 }
 </script>

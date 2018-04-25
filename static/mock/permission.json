@@ -1,12 +1,15 @@
 [
   "/",
   "/home",
-  "/mes,sage",
+  "/message",
   "/profile",
   "/orgnization",
   "/user",
   "/role",
   "/permission",
   "/dictionary",
-  "/configure"
+  "/configure",
+  "/demo/map",
+  "/demo/indoor",
+  "/demo/chart"
 ]

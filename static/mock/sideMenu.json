@@ -7,17 +7,17 @@
   {
     "name": "地图",
     "icon": "map",
-    "url": "/map"
+    "url": "/demo/map"
   },
   {
     "name": "室内图",
     "icon": "map",
-    "url": "/indoor"
+    "url": "/demo/indoor"
   },
   {
     "name": "图表",
     "icon": "pie-graph",
-    "url": "/chart"
+    "url": "/demo/chart"
   },
   {
     "name": "菜单示例",

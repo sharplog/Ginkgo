@@ -22,6 +22,9 @@ export default class App extends Vue {
 }
 </script>
 
+<style lang="less">
+  @import './theme/index.less';
+</style>
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -31,7 +34,4 @@ export default class App extends Vue {
   position: fixed;
   width: 100%;
 }
-</style>
-<style lang="less">
-  @import './theme/index.less';
 </style>
