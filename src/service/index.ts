@@ -21,7 +21,7 @@ const handleError = (error, fail) => {
 }
 
 class Service {
-  baseUrl: String = ''
+  baseUrl: string = ''
   http: any = http
 
   get (url, success, fail) {

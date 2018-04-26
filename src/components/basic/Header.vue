@@ -55,19 +55,19 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import {Getter} from 'vuex-class'
 
 @Component
 export default class AppHeader extends Vue {
-  imgSrc: String = '/static/img/logo.png';
-  @Getter('appName') appName: String
-  @Getter('userName') userName: String
+  imgSrc: string = '/static/img/logo.png';
+  @Getter('appName') appName: string
+  @Getter('userName') userName: string
 
-  get avatarLetter (): String {
+  get avatarLetter (): string {
     return this.userName ? this.userName.charAt(0) : ''
   }
 
-  get noticeNum (): String {
+  get noticeNum (): string {
     let num = this.$store.getters.noticeNum
     return num === 0 ? '' : num
   }

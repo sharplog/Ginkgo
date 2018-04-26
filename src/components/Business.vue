@@ -48,9 +48,9 @@ export default class Business extends Vue {
   contentStyle: any = {height: 'calc(100vh - 94px)', overflow: 'auto'}
   collapsedWidth: number = 64
   isCollapsed: boolean = false
-  headerHeight: String = '64px'
+  headerHeight: string = '64px'
 
-  get rotateIcon (): Array<String> {
+  get rotateIcon (): Array<string> {
     return [
       'menu-icon',
       this.isCollapsed ? '' : 'rotate-icon'

@@ -30,8 +30,8 @@ import { Getter } from 'vuex-class'
 
 @Component
 export default class Login extends Vue {
-  @Getter('appName') appName: String
-  @Getter('appVendor') appVendor: String
+  @Getter('appName') appName: string
+  @Getter('appVendor') appVendor: string
 
   loginData: any = {
     user: '',

@@ -8,8 +8,8 @@ import {Component, Vue} from 'vue-property-decorator'
 
 @Component
 export default class AppFooter extends Vue {
-  name: String = 'AppFooter';
-  msg: String = '';
+  name: string = 'AppFooter';
+  msg: string = '';
 }
 </script>
 

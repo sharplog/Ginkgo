@@ -42,7 +42,7 @@ export default class AppSider extends Vue {
   accordion: boolean = true
   @Getter('siderCollapsed') siderCollapsed: boolean
 
-  get menuitemClasses (): Array<String> {
+  get menuitemClasses (): Array<string> {
     return [
       'menu-item',
       this.siderCollapsed ? 'collapsed-menu' : ''
