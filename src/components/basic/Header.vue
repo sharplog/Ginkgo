@@ -72,7 +72,7 @@ export default class AppHeader extends Vue {
     return num === 0 ? '' : num
   }
 
-  get topMenu (): Array<any> {
+  get topMenu (): any[] {
     let key = 0
 
     this.$store.getters.topMenu.forEach((item, index) => {
