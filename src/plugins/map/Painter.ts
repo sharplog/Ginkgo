@@ -12,13 +12,13 @@ export default class Painter {
   iconMarkers: any = {}
   amap: any
   
-  constructor (private mapCom: any) {
-    this.amap = mapCom.amap
+  constructor (private gmap: any) {
+    this.amap = gmap.amap
   }
   
   drawMarkers (options: Types.MarkerOptions[]) {
     console.log('Painter draw markers')
-    let oldMarkers = this.mapCom.getOverlays('marker')
+    let oldMarkers = this.gmap.getOverlays('marker')
     
     for (let i = oldMarkers.length - 1; i >= 0; i--) {
       let has = false
@@ -32,7 +32,7 @@ export default class Painter {
       }
       
       // 删除options中不存在的Marker
-      !has && this.mapCom.removeMarkerByIndex(i)
+      !has && this.gmap.removeMarkerByIndex(i)
     }
     
     // 画原来不存在的Marker
@@ -61,8 +61,8 @@ export default class Painter {
       marker.g_group = option.group
       marker.setMap(this.amap)
       
-      if (option.group) this.mapCom.addToOverlayGroup(marker, option.group)
-      this.mapCom.addOverlay('marker', marker)
+      if (option.group) this.gmap.addToOverlayGroup(marker, option.group)
+      this.gmap.addOverlay('marker', marker)
     }
   }
   
