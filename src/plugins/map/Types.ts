@@ -2,7 +2,8 @@
  * 地图的类型定义
  */
 export interface MarkerOptions {
-  id: string
+  // 最好要有id，且id不能重复
+  id?: string
   
   // 数组元素依次是经度、纬度
   position: number[]

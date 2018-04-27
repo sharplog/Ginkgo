@@ -1,3 +1,4 @@
+import GMap from './GMap'
 import * as Types from './Types'
 
 let win: any = window
@@ -12,31 +13,13 @@ export default class Painter {
   iconMarkers: any = {}
   amap: any
   
-  constructor (private gmap: any) {
+  constructor (private gmap: GMap) {
     this.amap = gmap.amap
   }
   
   drawMarkers (options: Types.MarkerOptions[]) {
-    console.log('Painter draw markers')
-    let oldMarkers = this.gmap.getOverlays('marker')
-    
-    for (let i = oldMarkers.length - 1; i >= 0; i--) {
-      let has = false
-      for (let j = 0; j < options.length && !has; j++) {
-        if (oldMarkers[i].g_id === options[j].id) {
-          has = true
-          this.refreshMarker(oldMarkers[i], options[j])
-          options[j]._refreshed = true
-          break
-        }
-      }
-      
-      // 删除options中不存在的Marker
-      !has && this.gmap.removeMarkerByIndex(i)
-    }
-    
-    // 画原来不存在的Marker
     for (let option of options) {
+      // 已做刷新的不再画
       if (option._refreshed) continue
       
       let mo: any = {}
@@ -56,9 +39,9 @@ export default class Painter {
         marker.setLabel(label)
       }
       
-      marker.g_id = option.id
-      marker.g_message = option.message
-      marker.g_group = option.group
+      marker.gmap_id = option.id ? option.id : 'gmap_' + marker.getId()
+      marker.gmap_message = option.message
+      marker.gmap_group = option.group
       marker.setMap(this.amap)
       
       if (option.group) this.gmap.addToOverlayGroup(marker, option.group)
@@ -123,7 +106,7 @@ export default class Painter {
       marker.setTitle(option.title)
     }
     if (notNull(option.message)) {
-      marker.g_message = option.message
+      marker.gmap_message = option.message
     }
   }
 

@@ -17,11 +17,11 @@ export default class GMap {
   
   // 已经画好的覆盖物
   overlays: any = {
-    marker: [],
-    polyline: [],
-    polygon: [],
-    circle: [],
-    rectangle: []
+    marker: {},
+    polyline: {},
+    polygon: {},
+    circle: {},
+    rectangle: {}
   }
     
   // 覆盖物分组，便于控制
@@ -41,7 +41,7 @@ export default class GMap {
     this.painter = new Painter(this)
   }
   
-  addOverlay = (type: string, ol: any) => this.overlays[type].push(ol)
+  addOverlay = (type: string, ol: any) => this.overlays[type][ol.gmap_id] = ol
   
   getOverlays = (type: string) => this.overlays[type]
   
@@ -60,34 +60,26 @@ export default class GMap {
   }
   
   clearOverlays (type: string) {
-    while (this.overlays[type].length > 0) {
-      let ol = this.overlays[type].shift()
+    let ols = this.overlays[type]
+    if (!ols) return
+    
+    for (let id in ols) {
+      let ol = ols[id]
       ol.setMap(null)
-      if (ol.g_group) {
-        this.overlayGroups[ol.g_group].removeOverlay(ol)
+      if (ol.gmap_group) {
+        this.overlayGroups[ol.gmap_group].removeOverlay(ol)
       }
+      delete ols[id]
     }
   }
   
   removeMarker (marker: any) {
-    let markers = this.getOverlays('marker')
-    for (let i = 0; i < markers.length; i++) {
-      if (markers[i].g_id === marker.g_id) {
-        return this.removeMarkerByIndex(i)
-      }
-    }
+    marker.gmap_group && this.delFromOverlayGroup(marker, marker.gmap_group)
+    marker.setMap(null)
+    delete this.getOverlays('marker')[marker.gmap_id]
   }
   
-  removeMarkerByIndex (index: number) {
-    let mks = this.getOverlays('marker').splice(index, 1)
-    if (mks && mks.length > 0) {
-      let mk = mks[0]
-      mk.g_group && this.delFromOverlayGroup(mk, mk.g_group)
-      mk.setMap(null)
-    }
-  }
-  
-  destroyed = () => this.amap && this.amap.destroy()
+  destroy = () => this.amap && this.amap.destroy()
   setZoom = zoom => this.amap.setZoom(zoom)
   getZoom = () => this.amap.getZoom()
   setCenter = center => this.amap.setCenter(center)
@@ -96,31 +88,59 @@ export default class GMap {
   showOverlayGroup = groupName => this.overlayGroups[groupName] && this.overlayGroups[groupName].show()
   hideOverlayGroup = groupName => this.overlayGroups[groupName] && this.overlayGroups[groupName].hide()
   
-  drawMarkers (markers: Types.MarkerOptions[]) {
+  /**
+   * 画点标记
+   * 将已有的跟将要画的按id进行比较：
+   * 1）原来有，现在没有的，删除；
+   * 2）原来有，现在也有的，刷新；
+   * 3）原来没有，现在有的，添加。
+   */
+  drawMarkers (options: Types.MarkerOptions[]) {
     console.log('map draw markers')
     
-    // clear markers first
-    this.clearOverlays('marker')
-    markers && this.painter.drawMarkers(markers)
+    let mkoptions = options ? options : [] 
+    let curMarkers = this.getOverlays('marker')
+    
+    // 查找已经存在的，进行刷新
+    for (let i = 0; i < mkoptions.length; i++) {
+      let marker = curMarkers[mkoptions[i].id]
+      if (marker) {
+        this.painter.refreshMarker(marker, mkoptions[i])
+        mkoptions[i]._refreshed = true
+        marker.gmap_refreshed = true
+      }
+    }
+      
+    // 删除那些没有被刷新的Marker
+    for (let id in curMarkers) {
+      if (!curMarkers[id].gmap_refreshed) {
+        curMarkers[id].setMap(null)
+        delete curMarkers[id]
+      } else {
+        delete curMarkers[id].gmap_refreshed
+      }
+    }
+    
+    this.painter.drawMarkers(mkoptions)
   }
   
-  drawPolylines (polylines) {
+  drawPolylines (options) {
     this.clearOverlays('polyline')
-    polylines && this.painter.drawPolylines(polylines)
+    options && this.painter.drawPolylines(options)
   }
    
-  drawPolygons (polygons) {
+  drawPolygons (options) {
     this.clearOverlays('polygon')
-    polygons && this.painter.drawPolygons(polygons)
+    options && this.painter.drawPolygons(options)
   }
   
-  drawCircles (circles) {
+  drawCircles (options) {
     this.clearOverlays('circle')
-    circles && this.painter.drawCircles(circles)
+    options && this.painter.drawCircles(options)
   }
   
-  drawRectangles (rectangles) {
+  drawRectangles (options) {
     this.clearOverlays('rectangle')
-    rectangles && this.painter.drawRectangles(rectangles)
+    options && this.painter.drawRectangles(options)
   }
 }
