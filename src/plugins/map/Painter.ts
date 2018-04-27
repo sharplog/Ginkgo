@@ -3,6 +3,8 @@ import * as Types from './Types'
 let win: any = window
 let AMap: any = win.AMap
 
+function notNull (v) { return typeof v !== 'undefined' && v !== null }
+
 export default class Painter {
   // icon的size，需要访问icon图片后取得
   iconSizes: any = {}
@@ -14,9 +16,29 @@ export default class Painter {
     this.amap = mapCom.amap
   }
   
-  drawMarkers (markers: Types.MarkerOptions[]) {
+  drawMarkers (options: Types.MarkerOptions[]) {
     console.log('Painter draw markers')
-    for (let option of markers) {
+    let oldMarkers = this.mapCom.getOverlays('marker')
+    
+    for (let i = oldMarkers.length - 1; i >= 0; i--) {
+      let has = false
+      for (let j = 0; j < options.length && !has; j++) {
+        if (oldMarkers[i].g_id === options[j].id) {
+          has = true
+          this.refreshMarker(oldMarkers[i], options[j])
+          options[j]._refreshed = true
+          break
+        }
+      }
+      
+      // 删除options中不存在的Marker
+      !has && this.mapCom.removeMarkerByIndex(i)
+    }
+    
+    // 画原来不存在的Marker
+    for (let option of options) {
+      if (option._refreshed) continue
+      
       let mo: any = {}
       mo.position = option.position
       mo.title = option.title
@@ -34,12 +56,13 @@ export default class Painter {
         marker.setLabel(label)
       }
       
-      marker.g_message = option.message
       marker.g_id = option.id
+      marker.g_message = option.message
+      marker.g_group = option.group
       marker.setMap(this.amap)
       
       if (option.group) this.mapCom.addToOverlayGroup(marker, option.group)
-      this.mapCom.addOverlay(marker)
+      this.mapCom.addOverlay('marker', marker)
     }
   }
   
@@ -59,6 +82,51 @@ export default class Painter {
     return []
   }
   
+  /**
+   * title、label、message，如果没有值，则不刷新它们；如果为空串，则置为空串
+   */
+  refreshMarker (marker, option) {
+    if (option.position && option.position.length > 0) {
+      marker.setPosition(new AMap.LngLat(option.position[0], option.position[1]))
+    }
+    // 更新Label
+    if (notNull(option.label)) {
+      if (option.label === '') {
+        marker.setLabel({})
+      } else {
+        let label = marker.getLabel()
+        if (!notNull(label) || option.label !== label.content) {
+          let offset = marker.getOffset()
+          marker.setLabel({
+            content: option.label,
+            offset: new AMap.Pixel(-offset.getX(), -offset.getY())
+          })
+        }
+      }
+    }
+    // 更新icon
+    if (notNull(option.icon) && option.icon !== marker.getIcon()) {
+      marker.setIcon(option.icon)
+      
+      let size = this.getIconSize(option.icon, marker)
+      marker.setOffset(new AMap.Pixel(-size.width / 2, -size.height))
+      if (option.label) {
+        let label = {
+          content: option.label,
+          offset: new AMap.Pixel(size.width / 2, size.height)
+        }
+        marker.setLabel(label)
+      }
+    }
+    
+    if (notNull(option.title) && option.title !== marker.getTitle()) {
+      marker.setTitle(option.title)
+    }
+    if (notNull(option.message)) {
+      marker.g_message = option.message
+    }
+  }
+
   getIconSize (icon: string, marker: any) {
     let defaultSize = { width: 0, height: 0 }
     let _this = this

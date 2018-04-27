@@ -15,4 +15,7 @@ export interface MarkerOptions {
   label?: string
   title?: string
   group?: string
+  
+  // 供画Marker时使用
+  _refreshed?: boolean
 }

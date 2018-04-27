@@ -21,7 +21,14 @@ export default class GinkgoMap extends Vue {
   painter: Painter
   
   // 已经画好的覆盖物
-  overlays: any[] = []
+  overlays: any = {
+    marker: [],
+    polyline: [],
+    polygon: [],
+    circle: [],
+    rectangle: []
+  }
+    
   // 覆盖物分组，便于控制
   overlayGroups: any = {}
 
@@ -35,8 +42,6 @@ export default class GinkgoMap extends Vue {
   @Prop() rectangles: any[]
   
   mounted () {
-    let _this = this
-    
     if (this.options) {
       for (let k in this.options) this.defaultOptions[k] = this.options[k]
     }
@@ -50,10 +55,10 @@ export default class GinkgoMap extends Vue {
     }
     
     // 把地图当前的中心位置和zoom返回到父组件中
-    amap.on('zoomend', () => { _this.$emit('update:zoom', amap.getZoom()) })
+    amap.on('zoomend', () => { this.$emit('update:zoom', amap.getZoom()) })
     amap.on('moveend', () => {
       let c = amap.getCenter()
-      _this.$emit('update:center', [c.lng, c.lat])
+      this.$emit('update:center', [c.lng, c.lat])
     })
     
     this.amap = amap
@@ -70,9 +75,9 @@ export default class GinkgoMap extends Vue {
     this.amap && this.amap.destroy()
   }
   
-  addOverlay (ol) {
-    this.overlays.push(ol)
-  }
+  addOverlay = (type: string, ol: any) => this.overlays[type].push(ol)
+  
+  getOverlays = (type: string) => this.overlays[type]
   
   addToOverlayGroup (ol: any, groupName: string) {
     let group = this.overlayGroups[groupName]
@@ -83,29 +88,69 @@ export default class GinkgoMap extends Vue {
     group.addOverlay(ol)
   }
   
+  delFromOverlayGroup (ol: any, groupName: string) {
+    let group = this.overlayGroups[groupName]
+    group && group.removeOverlay(ol)
+  }
+  
+  clearOverlays (type: string) {
+    while (this.overlays[type].length > 0) {
+      let ol = this.overlays[type].shift()
+      ol.setMap(null)
+      if (ol.g_group) {
+        this.overlayGroups[ol.g_group].removeOverlay(ol)
+      }
+    }
+  }
+  
+  removeMarker (marker: any) {
+    let markers = this.getOverlays('marker')
+    for (let i = 0; i < markers.length; i++) {
+      if (markers[i].g_id === marker.g_id) {
+        return this.removeMarkerByIndex(i)
+      }
+    }
+  }
+  
+  removeMarkerByIndex (index: number) {
+    let mks = this.getOverlays('marker').splice(index, 1)
+    if (mks && mks.length > 0) {
+      let mk = mks[0]
+      mk.g_group && this.delFromOverlayGroup(mk, mk.g_group)
+      mk.setMap(null)
+    }
+  }
+  
   @Watch('markers')
   drawMarkers () {
     console.log('map draw markers')
+    
+    // clear markers first
+    this.clearOverlays('marker')
     this.markers && this.painter.drawMarkers(this.markers)
   }
   
   @Watch('polylines')
   drawPolylines () {
+    this.clearOverlays('polyline')
     this.polylines && this.painter.drawPolylines(this.polylines)
   }
    
   @Watch('polygons')
   drawPolygons () {
+    this.clearOverlays('polygon')
     this.polygons && this.painter.drawPolygons(this.polygons)
   }
   
   @Watch('circles')
   drawCircles () {
+    this.clearOverlays('circle')
     this.circles && this.painter.drawCircles(this.circles)
   }
   
   @Watch('rectangles')
   drawRectangles () {
+    this.clearOverlays('rectangle')
     this.rectangles && this.painter.drawRectangles(this.rectangles)
   }
   
