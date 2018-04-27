@@ -3,8 +3,17 @@ import * as Types from './Types'
 
 let win: any = window
 let AMap: any = win.AMap
+let infoWindow = new AMap.InfoWindow()
 
 function notNull (v) { return typeof v !== 'undefined' && v !== null }
+
+function showMessage (event) {
+  // 使用默认信息窗体框样式，显示信息内容
+  if (this.gmap_message) {
+    infoWindow.setContent(this.gmap_message)
+    infoWindow.open(this.getMap(), event.lnglat)
+  }
+}
 
 export default class Painter {
   // icon的size，需要访问icon图片后取得
@@ -44,6 +53,7 @@ export default class Painter {
       marker.gmap_group = option.group
       marker.setMap(this.amap)
       
+      marker.on('click', showMessage)
       if (option.group) this.gmap.addToOverlayGroup(marker, option.group)
       this.gmap.addOverlay('marker', marker)
     }

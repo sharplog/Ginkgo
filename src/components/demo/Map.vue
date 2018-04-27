@@ -30,6 +30,7 @@ export default class Map extends Vue {
       icon: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
       label: '测试点1',
       title: '测试title1',
+      message: '哈哈！It\'s me!',
       group: 'group1'
     },
     { id: 'mk2',
@@ -73,11 +74,14 @@ export default class Map extends Vue {
         icon: 'https://www.baidu.com/img/baidu_jgylogo4.gif',
         label: '新测试点1',
         title: '新测试title1',
+        message: '哈哈！It\'s me too!',
         group: 'group1'
       },
-      { position: [117.32224, 38.67429],
+      { id: 'mk5',
+        position: [117.32224, 38.67429],
         icon: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
         label: '测试点2',
+        message: '哈哈！It\'s me too!!!',
         group: 'group2'
       }
     ]
