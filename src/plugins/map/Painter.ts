@@ -31,13 +31,8 @@ export default class Painter {
       // 已做刷新的不再画
       if (option._refreshed) continue
       
-      let mo: any = {}
-      mo.position = option.position
-      mo.title = option.title
-      mo.icon = option.icon
-      let marker = new AMap.Marker(mo)
-      
-      let size = this.getIconSize(mo.icon, marker)
+      let marker = new AMap.Marker(option)
+      let size = this.getIconSize(option.icon, marker)
       
       marker.setOffset(new AMap.Pixel(-size.width / 2, -size.height))
       if (option.label) {
@@ -59,19 +54,32 @@ export default class Painter {
     }
   }
   
-  drawPolylines (lines: any[]) {
+  drawPolylines (options: Types.PolylineOptions[]) {
+    for (let option of options) {
+      if (!option.cursor) option.cursor = 'pointer'
+      if (option.borderWeight || option.outlineColor) option.isOutline = true
+      
+      let line = new AMap.Polyline(option)
+      line.gmap_id = option.id ? option.id : 'gmap_' + line.getId()
+      line.gmap_message = option.message
+      line.gmap_group = option.group
+      line.setMap(this.amap)
+      
+      line.on('click', showMessage)
+      if (option.group) this.gmap.addToOverlayGroup(line, option.group)
+      this.gmap.addOverlay('polyline', line)
+    }
+  }
+  
+  drawPolygons (options: any[]) {
     return []
   }
   
-  drawPolygons (polygons: any[]) {
+  drawCircles (options: any[]) {
     return []
   }
   
-  drawCircles (circles: any[]) {
-    return []
-  }
-  
-  drawRectangles (rectangles: any[]) {
+  drawRectangles (options: any[]) {
     return []
   }
   

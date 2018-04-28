@@ -41,7 +41,11 @@ export default class GMap {
     this.painter = new Painter(this)
   }
   
-  addOverlay = (type: string, ol: any) => this.overlays[type][ol.gmap_id] = ol
+  addOverlay = (type: string, ol: any) => {
+    let ol0 = this.overlays[type][ol.gmap_id]
+    if (ol0 && ol0 !== ol) ol0.setMap(null)
+    this.overlays[type][ol.gmap_id] = ol
+  }
   
   getOverlays = (type: string) => this.overlays[type]
   
@@ -54,15 +58,13 @@ export default class GMap {
     group.addOverlay(ol)
   }
   
-  delFromOverlayGroup (ol: any, groupName: string) {
-    let group = this.overlayGroups[groupName]
-    group && group.removeOverlay(ol)
+  delFromOverlayGroup (overlay: any) {
+    let group = this.overlayGroups[overlay.gmap_group]
+    group && group.removeOverlay(overlay)
   }
   
   clearOverlays (type: string) {
     let ols = this.overlays[type]
-    if (!ols) return
-    
     for (let id in ols) {
       let ol = ols[id]
       ol.setMap(null)
@@ -73,16 +75,28 @@ export default class GMap {
     }
   }
   
-  removeMarker (marker: any) {
-    marker.gmap_group && this.delFromOverlayGroup(marker, marker.gmap_group)
-    marker.setMap(null)
-    delete this.getOverlays('marker')[marker.gmap_id]
+  removeMarker = (gmapId: string) => this.removeOverlayById('marker', gmapId)
+  removePolyline = (gmapId: string) => this.removeOverlayById('polyline', gmapId)
+  removePolygon = (gmapId: string) => this.removeOverlayById('polygon', gmapId)
+  removeCircle = (gmapId: string) => this.removeOverlayById('circle', gmapId)
+  removeRectangle = (gmapId: string) => this.removeOverlayById('rectangle', gmapId)
+
+  removeOverlayById (type: string, gmapId: string) {
+    let overlay = this.getOverlays(type)[gmapId]
+    if (!overlay) {
+      console.warn(type + '[gmap_id: ' + gmapId + '] is not found.')
+      return
+    }
+    
+    overlay.setMap(null)
+    overlay.gmap_group && this.delFromOverlayGroup(overlay)
+    delete this.getOverlays(type)[overlay.gmap_id]
   }
   
   destroy = () => this.amap && this.amap.destroy()
-  setZoom = zoom => this.amap.setZoom(zoom)
+  setZoom = (zoom: number) => this.amap.setZoom(zoom)
   getZoom = () => this.amap.getZoom()
-  setCenter = center => this.amap.setCenter(center)
+  setCenter = (center: number[]) => this.amap.setCenter(center)
   getCenter = () => this.amap.getCenter()
   on = (eventName: string, callback) => this.amap.on(eventName, callback)
   showOverlayGroup = groupName => this.overlayGroups[groupName] && this.overlayGroups[groupName].show()

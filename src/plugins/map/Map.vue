@@ -11,6 +11,7 @@ import GMap from './GMap'
 export default class GinkgoMap extends Vue {
   name: string = 'ginkgo-gmap'
   gmap: any
+  @Prop() gmapObj: any
   
   @Prop() options: any
   @Prop() zoom: number
@@ -27,6 +28,7 @@ export default class GinkgoMap extends Vue {
     if (this.center) options.center = this.center
     
     this.gmap = new GMap(this.$el, options)
+    this.$emit('update:gmapObj', this.gmap)
     
     // 把地图当前的中心位置和zoom返回到父组件中
     this.gmap.on('zoomend', () => { this.$emit('update:zoom', this.gmap.getZoom()) })
@@ -90,9 +92,13 @@ export default class GinkgoMap extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+/* Marker Label的样式 */
 .amap-marker-label {
   border: 1px solid #b8b8b8;
   color: #646464;
   border-radius: 0px 4px 4px 4px;
+}
+/* 信息框内容的样式 */
+.amap-info-content {
 }
 </style>
