@@ -10,7 +10,12 @@ let AMap: any = win.AMap
 export default class GMap {
   defaultOptions: any = {
     resizeEnable: true,
-    scale: true
+    scale: true,
+    scalePosition: 'LB',
+    toolBar: true,
+    toolBarPosition: 'RB',
+    toolBarDirection: false,
+    typeBar: true
   }
   amap: any
   painter: Painter
@@ -28,13 +33,48 @@ export default class GMap {
   overlayGroups: any = {}
 
   constructor (el, options) {
+    let ops = this.defaultOptions
     if (options) {
-      for (let k in options) this.defaultOptions[k] = options[k]
+      for (let k in options) ops[k] = options[k]
     }
     
-    this.amap = new AMap.Map(el, this.defaultOptions)
-    if (AMap.Scale && this.defaultOptions.scale) {
-      this.amap.addControl(new AMap.Scale())
+    /**
+     * 地图选项支持：
+     * zoom
+     * center
+     * scale: boolean
+     * scaleOffset: [x:number,y:yumber]
+     * scalePosition: string,LT/RT/LB/RB
+     * toolBar: boolean
+     * toolBarOffset: [x:number,y:yumber]
+     * toolBarPosition: string,LT/RT/LB/RB
+     * toolBarDirection: boolean
+     * typeBar: boolean
+     * mapType: number, 0-默认底图，1-卫星图
+     */
+    this.amap = new AMap.Map(el, ops)
+    
+    if (AMap.Scale && ops.scale) {
+      let scaleOps: any = {
+        position: ops.scalePosition
+      }
+      if (ops.scaleOffset) scaleOps.offset = new AMap.Pixel(ops.scaleOffset[0], ops.scaleOffset[1])
+      this.amap.addControl(new AMap.Scale(scaleOps))
+    }
+    
+    if (AMap.ToolBar && ops.toolBar) {
+      let toolBarOps: any = { 
+        direction: ops.toolBarDirection,
+        position: ops.toolBarPosition
+      }
+      if (ops.toolBarOffset) toolBarOps.offset = new AMap.Pixel(ops.toolBarOffset[0], ops.toolBarOffset[1])
+      this.amap.addControl(new AMap.ToolBar(toolBarOps))
+    }
+
+    if (AMap.MapType && (ops.typeBar || ops.mapType)) {
+      let mapTypeOps: any = { }
+      if (options.mapType) mapTypeOps.defaultType = options.mapType
+      this.amap.addControl(new AMap.MapType(mapTypeOps))
     }
     
     this.painter = new Painter(this)

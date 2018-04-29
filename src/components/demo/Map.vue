@@ -108,7 +108,7 @@ export default class Map extends Vue {
       radius: 7000,
       strokeWeight: 2,
       cursor: 'pointer',
-      message: '哈哈！It\'s polygon!',
+      message: '哈哈！It\'s circle!',
       fillColor: 'yellow',
       // fillOpacity: 0.5,
       strokeStyle: 'dashed',
@@ -138,7 +138,10 @@ export default class Map extends Vue {
   mapOptions: any = {
     resizeEnable: true,
     zoom: 11,
-    center: [117.12224, 36.67429]
+    center: [117.12224, 36.67429],
+    mapType: 0,
+    scaleOffset: [40, 40],
+    scalePosition: 'LT'
   }
   
   setZoom () {
