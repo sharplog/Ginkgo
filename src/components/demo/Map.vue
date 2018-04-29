@@ -96,6 +96,8 @@ export default class Map extends Vue {
       fillOpacity: 0.5,
       strokeStyle: 'dashed',
       strokeDasharray: [15, 2, 2, 2],
+      lightenOpacity: 0.9,
+      lightenColor: 'green',
       group: 'group1'
     }  
   ]
@@ -108,9 +110,10 @@ export default class Map extends Vue {
       cursor: 'pointer',
       message: '哈哈！It\'s polygon!',
       fillColor: 'yellow',
-      fillOpacity: 0.5,
+      // fillOpacity: 0.5,
       strokeStyle: 'dashed',
       strokeDasharray: [15, 2, 2, 2],
+      lightenOpacity: 0.6,
       group: 'group1'
     }  
   ]
@@ -127,6 +130,7 @@ export default class Map extends Vue {
       fillOpacity: 0.5,
       strokeStyle: 'dashed',
       strokeDasharray: [15, 2, 2, 2],
+      lightenColor: 'blue',
       group: 'group1'
     }  
   ]

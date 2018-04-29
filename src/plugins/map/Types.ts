@@ -122,6 +122,12 @@ export interface PolygonOptions {
   // 鼠标悬停时的鼠标样式
   cursor?: string
   
+  // 鼠标经过时的透明度
+  lightenOpacity?: number
+  
+  // 鼠标经过时的颜色
+  lightenColor?: string
+  
   // 多边形覆盖物的叠加顺序
   zIndex?: string
   
@@ -174,6 +180,12 @@ export interface CircleOptions {
   // 鼠标悬停时的鼠标样式
   cursor?: string
   
+  // 鼠标经过时的透明度
+  lightenOpacity?: number
+  
+  // 鼠标经过时的颜色
+  lightenColor?: string
+  
   // 圆覆盖物的叠加顺序
   zIndex?: string
   
@@ -225,6 +237,12 @@ export interface RectangleOptions {
   
   // 鼠标悬停时的鼠标样式
   cursor?: string
+  
+  // 鼠标经过时的透明度
+  lightenOpacity?: number
+  
+  // 鼠标经过时的颜色
+  lightenColor?: string
   
   // 矩形覆盖物的叠加顺序
   zIndex?: string

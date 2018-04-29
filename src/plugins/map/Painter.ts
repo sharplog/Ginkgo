@@ -91,6 +91,25 @@ export default class Painter {
     overlay.setMap(this.amap)
     
     overlay.on('click', showMessage)
+    
+    // 设置鼠标经过时透明度变化
+    if (notNull(option.lightenOpacity) || option.lightenColor) {
+      let oriOpacity = overlay.getOptions().fillOpacity
+      let oriColor = overlay.getOptions().fillColor
+
+      overlay.on('mouseover', () => overlay.setOptions(
+        {
+          fillOpacity: notNull(option.lightenOpacity) ? option.lightenOpacity : oriOpacity,
+          fillColor: option.lightenColor ? option.lightenColor : oriColor
+        })
+      )
+      overlay.on('mouseout', () => overlay.setOptions(
+        {
+          fillOpacity: oriOpacity,
+          fillColor: oriColor
+        })
+      )
+    }
     if (option.group) this.gmap.addToOverlayGroup(overlay, option.group)
     this.gmap.addOverlay(type, overlay)
   }
