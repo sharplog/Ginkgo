@@ -17,11 +17,11 @@ export default class GMap {
   
   // 已经画好的覆盖物
   overlays: any = {
-    marker: {},
-    polyline: {},
-    polygon: {},
-    circle: {},
-    rectangle: {}
+    [Types.TYPE_MARKER]: {},
+    [Types.TYPE_POLYLINE]: {},
+    [Types.TYPE_POLYGON]: {},
+    [Types.TYPE_CIRCLE]: {},
+    [Types.TYPE_RECTANGLE]: {}
   }
     
   // 覆盖物分组，便于控制
@@ -34,7 +34,6 @@ export default class GMap {
     
     this.amap = new AMap.Map(el, this.defaultOptions)
     if (AMap.Scale && this.defaultOptions.scale) {
-      // debugger
       this.amap.addControl(new AMap.Scale())
     }
     
@@ -75,11 +74,17 @@ export default class GMap {
     }
   }
   
-  removeMarker = (gmapId: string) => this.removeOverlayById('marker', gmapId)
-  removePolyline = (gmapId: string) => this.removeOverlayById('polyline', gmapId)
-  removePolygon = (gmapId: string) => this.removeOverlayById('polygon', gmapId)
-  removeCircle = (gmapId: string) => this.removeOverlayById('circle', gmapId)
-  removeRectangle = (gmapId: string) => this.removeOverlayById('rectangle', gmapId)
+  getMarker = (gmapId: string) => this.getOverlays(Types.TYPE_MARKER)[gmapId]
+  getPolyline = (gmapId: string) => this.getOverlays(Types.TYPE_POLYLINE)[gmapId]
+  getPolygon = (gmapId: string) => this.getOverlays(Types.TYPE_POLYGON)[gmapId]
+  getCircle = (gmapId: string) => this.getOverlays(Types.TYPE_CIRCLE)[gmapId]
+  getRectangle = (gmapId: string) => this.getOverlays(Types.TYPE_RECTANGLE)[gmapId]
+  
+  removeMarker = (gmapId: string) => this.removeOverlayById(Types.TYPE_MARKER, gmapId)
+  removePolyline = (gmapId: string) => this.removeOverlayById(Types.TYPE_POLYLINE, gmapId)
+  removePolygon = (gmapId: string) => this.removeOverlayById(Types.TYPE_POLYGON, gmapId)
+  removeCircle = (gmapId: string) => this.removeOverlayById(Types.TYPE_CIRCLE, gmapId)
+  removeRectangle = (gmapId: string) => this.removeOverlayById(Types.TYPE_RECTANGLE, gmapId)
 
   removeOverlayById (type: string, gmapId: string) {
     let overlay = this.getOverlays(type)[gmapId]
@@ -113,7 +118,7 @@ export default class GMap {
     console.log('map draw markers')
     
     let mkoptions = options ? options : [] 
-    let curMarkers = this.getOverlays('marker')
+    let curMarkers = this.getOverlays(Types.TYPE_MARKER)
     
     // 查找已经存在的，进行刷新
     for (let i = 0; i < mkoptions.length; i++) {
@@ -139,22 +144,22 @@ export default class GMap {
   }
   
   drawPolylines (options) {
-    this.clearOverlays('polyline')
+    this.clearOverlays(Types.TYPE_POLYLINE)
     options && this.painter.drawPolylines(options)
   }
    
   drawPolygons (options) {
-    this.clearOverlays('polygon')
+    this.clearOverlays(Types.TYPE_POLYGON)
     options && this.painter.drawPolygons(options)
   }
   
   drawCircles (options) {
-    this.clearOverlays('circle')
+    this.clearOverlays(Types.TYPE_CIRCLE)
     options && this.painter.drawCircles(options)
   }
   
   drawRectangles (options) {
-    this.clearOverlays('rectangle')
+    this.clearOverlays(Types.TYPE_RECTANGLE)
     options && this.painter.drawRectangles(options)
   }
 }

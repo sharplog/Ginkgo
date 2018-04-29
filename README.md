@@ -1,6 +1,6 @@
 # ginkgo
 
-> A Vue.js front framework
+> A Vue.js front application framework
 
 ## Build Setup
 

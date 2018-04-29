@@ -43,44 +43,56 @@ export default class Painter {
         marker.setLabel(label)
       }
       
-      marker.gmap_id = option.id ? option.id : 'gmap_' + marker.getId()
-      marker.gmap_message = option.message
-      marker.gmap_group = option.group
-      marker.setMap(this.amap)
-      
-      marker.on('click', showMessage)
-      if (option.group) this.gmap.addToOverlayGroup(marker, option.group)
-      this.gmap.addOverlay('marker', marker)
+      this.addOverlay(Types.TYPE_MARKER, marker, option)
     }
   }
   
   drawPolylines (options: Types.PolylineOptions[]) {
     for (let option of options) {
-      if (!option.cursor) option.cursor = 'pointer'
       if (option.borderWeight || option.outlineColor) option.isOutline = true
       
       let line = new AMap.Polyline(option)
-      line.gmap_id = option.id ? option.id : 'gmap_' + line.getId()
-      line.gmap_message = option.message
-      line.gmap_group = option.group
-      line.setMap(this.amap)
-      
-      line.on('click', showMessage)
-      if (option.group) this.gmap.addToOverlayGroup(line, option.group)
-      this.gmap.addOverlay('polyline', line)
+      this.addOverlay(Types.TYPE_POLYLINE, line, option)
     }
   }
   
-  drawPolygons (options: any[]) {
-    return []
+  drawPolygons (options: Types.PolygonOptions[]) {
+    for (let option of options) {
+      if (!option.cursor) option.cursor = 'pointer'
+      
+      let polygon = new AMap.Polygon(option)
+      this.addOverlay(Types.TYPE_POLYGON, polygon, option)
+    }
   }
   
   drawCircles (options: any[]) {
-    return []
+    for (let option of options) {
+      if (!option.cursor) option.cursor = 'pointer'
+      
+      let circle = new AMap.Circle(option)
+      this.addOverlay(Types.TYPE_CIRCLE, circle, option)
+    }
   }
   
   drawRectangles (options: any[]) {
-    return []
+    for (let option of options) {
+      if (!option.cursor) option.cursor = 'pointer'
+      option.bounds = new AMap.Bounds(option.southWest, option.northEast)
+      
+      let rectangle = new AMap.Rectangle(option)
+      this.addOverlay(Types.TYPE_RECTANGLE, rectangle, option)
+    }
+  }
+  
+  addOverlay (type: string, overlay: any, option: any) {
+    overlay.gmap_id = option.id ? option.id : 'gmap_' + overlay.getId()
+    overlay.gmap_message = option.message
+    overlay.gmap_group = option.group
+    overlay.setMap(this.amap)
+    
+    overlay.on('click', showMessage)
+    if (option.group) this.gmap.addToOverlayGroup(overlay, option.group)
+    this.gmap.addOverlay(type, overlay)
   }
   
   /**

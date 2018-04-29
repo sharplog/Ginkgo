@@ -4,10 +4,17 @@
       <button @click="setZoom">zoom({{ zoom }})</button>
       <button @click="setCenter">c({{ center[0] }})</button>
       <button @click="setMarkers">重置点标记</button>
-      <button @click="rmMakerLine">rmMakerLine</button>
+      <button @click="rmMakerLine">删点线面</button>
+      <button @click="rmMakerLine">新建点</button>
+      <button @click="rmMakerLine">新建线</button>
+      <button @click="rmMakerLine">新建面</button>
+      <button @click="rmMakerLine">新建圆</button>
+      <button @click="rmMakerLine">新建矩形</button>
+      <button @click="rmMakerLine">轨迹回放</button>
+      <!-- 画线面时，设置样式。回放时能够控制 -->
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
-        :markers="markers" :polylines="polylines">
+        :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles">
     </ginkgo-map>
   </div>
 </template>
@@ -66,7 +73,60 @@ export default class Map extends Vue {
       cursor: 'pointer',
       message: '哈哈！It\'s me!',
       outlineColor: 'red',
+      strokeStyle: 'dashed',
+      strokeDasharray: [15, 2, 2, 2],
       showDir: true,
+      group: 'group1'
+    }  
+  ]
+  
+  polygons: any[] = [
+    { id: 'gon1',
+      path: [
+        [116.82224, 36.67429],
+        [116.82224, 36.77429],
+        [116.87224, 36.80429],
+        [116.92224, 36.77429],
+        [116.92224, 36.67429]
+      ],
+      strokeWeight: 2,
+      cursor: 'pointer',
+      message: '哈哈！It\'s polygon!',
+      fillColor: 'blue',
+      fillOpacity: 0.5,
+      strokeStyle: 'dashed',
+      strokeDasharray: [15, 2, 2, 2],
+      group: 'group1'
+    }  
+  ]
+  
+  circles: any[] = [
+    { id: 'circle1',
+      center: [117.02224, 36.72429],
+      radius: 7000,
+      strokeWeight: 2,
+      cursor: 'pointer',
+      message: '哈哈！It\'s polygon!',
+      fillColor: 'yellow',
+      fillOpacity: 0.5,
+      strokeStyle: 'dashed',
+      strokeDasharray: [15, 2, 2, 2],
+      group: 'group1'
+    }  
+  ]
+  
+  rectangles: any[] = [
+    { id: 'rect1',
+      southWest: [117.12224, 36.72429],
+      northEast: [117.27224, 36.80429],
+      radius: 7000,
+      strokeWeight: 2,
+      cursor: 'pointer',
+      message: '哈哈！It\'s rectangle!',
+      fillColor: 'green',
+      fillOpacity: 0.5,
+      strokeStyle: 'dashed',
+      strokeDasharray: [15, 2, 2, 2],
       group: 'group1'
     }  
   ]
@@ -109,6 +169,9 @@ export default class Map extends Vue {
     // this.$refs.map.setZoom ()
     this.gmap.removeMarker('mk1')
     this.gmap.removePolyline('line1')
+    this.gmap.removePolygon('gon1')
+    this.gmap.removeCircle('circle1')
+    this.gmap.removeRectangle('rect1')
   }
 }
 
