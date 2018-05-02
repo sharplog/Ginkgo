@@ -4,7 +4,8 @@
       <button @click="setZoom">zoom({{ zoom }})</button>
       <button @click="setCenter">c({{ center[0] }})</button>
       <button @click="setMarkers">重置点标记</button>
-      <button @click="rmMakerLine">删点线面</button>
+      <button @click="rmMakerLine">删单个点线面</button>
+      <button @click="rmAll">删所有点线面</button>
       <button @click="rmMakerLine">新建点</button>
       <button @click="rmMakerLine">新建线</button>
       <button @click="rmMakerLine">新建面</button>
@@ -179,6 +180,17 @@ export default class Map extends Vue {
     this.gmap.removePolygon('gon1')
     this.gmap.removeCircle('circle1')
     this.gmap.removeRectangle('rect1')
+  }
+  
+  // 通过设置数据的方式删除原来画的点线面
+  rmAll () {
+    this.markers = []
+    this.polylines = []
+    this.polygons = null
+    this.circles = null
+    
+    // let undefined: any
+    this.rectangles = undefined
   }
 }
 

@@ -20,14 +20,44 @@ export default class Painter {
   iconSizes: any = {}
   // 待取得icon的size后，需要更新offset的Marker
   iconMarkers: any = {}
-  amap: any
   
   constructor (private gmap: GMap) {
-    this.amap = gmap.amap
   }
   
+  /**
+   * 画点标记
+   * 将已有的跟将要画的按id进行比较：
+   * 1）原来有，现在没有的，删除；
+   * 2）原来有，现在也有的，刷新；
+   * 3）原来没有，现在有的，添加。
+   */
   drawMarkers (options: Types.MarkerOptions[]) {
-    for (let option of options) {
+    console.log('map draw markers')
+    
+    let mkoptions = options ? options : [] 
+    let curMarkers = this.gmap.getOverlays(Types.TYPE_MARKER)
+    
+    // 查找已经存在的，进行刷新
+    for (let i = 0; i < mkoptions.length; i++) {
+      let marker = curMarkers[mkoptions[i].id]
+      if (marker) {
+        this.refreshMarker(marker, mkoptions[i])
+        mkoptions[i]._refreshed = true
+        marker.gmap_refreshed = true
+      }
+    }
+      
+    // 删除那些没有被刷新的Marker
+    for (let id in curMarkers) {
+      if (!curMarkers[id].gmap_refreshed) {
+        this.gmap.removeOverlayById(Types.TYPE_MARKER, id)
+      } else {
+        delete curMarkers[id].gmap_refreshed
+      }
+    }
+    
+    // 画那些需要新画的
+    for (let option of mkoptions) {
       // 已做刷新的不再画
       if (option._refreshed) continue
       
@@ -48,6 +78,10 @@ export default class Painter {
   }
   
   drawPolylines (options: Types.PolylineOptions[]) {
+    this.gmap.clearOverlays(Types.TYPE_POLYLINE)
+    
+    if (!options) return
+    
     for (let option of options) {
       if (option.borderWeight || option.outlineColor) option.isOutline = true
       
@@ -57,6 +91,10 @@ export default class Painter {
   }
   
   drawPolygons (options: Types.PolygonOptions[]) {
+    this.gmap.clearOverlays(Types.TYPE_POLYGON)
+    
+    if (!options) return
+
     for (let option of options) {
       if (!option.cursor) option.cursor = 'pointer'
       
@@ -66,6 +104,10 @@ export default class Painter {
   }
   
   drawCircles (options: any[]) {
+    this.gmap.clearOverlays(Types.TYPE_CIRCLE)
+    
+    if (!options) return
+
     for (let option of options) {
       if (!option.cursor) option.cursor = 'pointer'
       
@@ -75,6 +117,10 @@ export default class Painter {
   }
   
   drawRectangles (options: any[]) {
+    this.gmap.clearOverlays(Types.TYPE_RECTANGLE)
+    
+    if (!options) return
+    
     for (let option of options) {
       if (!option.cursor) option.cursor = 'pointer'
       option.bounds = new AMap.Bounds(option.southWest, option.northEast)
@@ -85,11 +131,7 @@ export default class Painter {
   }
   
   addOverlay (type: string, overlay: any, option: any) {
-    overlay.gmap_id = option.id ? option.id : 'gmap_' + overlay.getId()
     overlay.gmap_message = option.message
-    overlay.gmap_group = option.group
-    overlay.setMap(this.amap)
-    
     overlay.on('click', showMessage)
     
     // 设置鼠标经过时透明度变化
@@ -110,8 +152,7 @@ export default class Painter {
         })
       )
     }
-    if (option.group) this.gmap.addToOverlayGroup(overlay, option.group)
-    this.gmap.addOverlay(type, overlay)
+    this.gmap.addOverlay(type, overlay, option)
   }
   
   /**

@@ -6,13 +6,19 @@
 <script lang="ts">
 import {Component, Prop, Watch, Vue} from 'vue-property-decorator'
 import GMap from './GMap'
+import Painter from './Painter'
+// import Tracker from './Tracker'
+// import Editer from './Editer'
 
 @Component
 export default class GinkgoMap extends Vue {
   name: string = 'ginkgo-gmap'
-  gmap: any
-  @Prop() gmapObj: any
+  gmap: GMap
+  painter: Painter
+  _tracker: any
+  _editer: any
   
+  @Prop() gmapObj: any
   @Prop() options: any
   @Prop() zoom: number
   @Prop() center: number[]
@@ -21,6 +27,9 @@ export default class GinkgoMap extends Vue {
   @Prop() polygons: any[]
   @Prop() circles: any[]
   @Prop() rectangles: any[]
+  @Prop() trackData: any
+  @Prop() trackOptions: any
+  @Prop() tracker: any
   
   mounted () {
     let options = this.options ? this.options : {}
@@ -37,40 +46,53 @@ export default class GinkgoMap extends Vue {
       this.$emit('update:center', [c.lng, c.lat])
     })
     
+    this.painter = new Painter(this.gmap)
     this.drawPolygons()
     this.drawCircles()
     this.drawRectangles()
     this.drawPolylines()
     this.drawMarkers()
+    this.playback()
   }
   
   destroyed () {
     this.gmap && this.gmap.destroy()
   }
   
+  @Watch('trackData')
+  playback () {
+  /*
+    if (!this._tracker) {
+      this._tracker = this.gmap.createTracker(this.trackOptions)
+      this.$emit('update:tracker', this._tracker)
+    }
+    this._tracker.playback(this.trackData)
+  */
+  }
+  
   @Watch('markers')
   drawMarkers () {
-    this.gmap.drawMarkers(this.markers)
+    this.painter.drawMarkers(this.markers)
   }
   
   @Watch('polylines')
   drawPolylines () {
-    this.gmap.drawPolylines(this.polylines)
+    this.painter.drawPolylines(this.polylines)
   }
    
   @Watch('polygons')
   drawPolygons () {
-    this.gmap.drawPolygons(this.polygons)
+    this.painter.drawPolygons(this.polygons)
   }
   
   @Watch('circles')
   drawCircles () {
-    this.gmap.drawCircles(this.circles)
+    this.painter.drawCircles(this.circles)
   }
   
   @Watch('rectangles')
   drawRectangles () {
-    this.gmap.drawRectangles(this.rectangles)
+    this.painter.drawRectangles(this.rectangles)
   }
   
   @Watch('zoom')

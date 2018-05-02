@@ -80,13 +80,37 @@ export default class GMap {
     this.painter = new Painter(this)
   }
   
-  addOverlay = (type: string, ol: any) => {
-    let ol0 = this.overlays[type][ol.gmap_id]
-    if (ol0 && ol0 !== ol) ol0.setMap(null)
-    this.overlays[type][ol.gmap_id] = ol
+  addOverlay = (type: string, overlay: any, option: any) => {
+    overlay.gmap_id = option.id ? option.id : 'gmap_' + overlay.getId()
+    overlay.gmap_group = option.group
+    
+    let ol = this.overlays[type][overlay.gmap_id]
+    if (ol && ol !== overlay) this.removeOverlayById(type, ol.gmap_id)
+      
+    if (overlay.gmap_group) this.addToOverlayGroup(overlay, overlay.gmap_group)
+    this.overlays[type][overlay.gmap_id] = overlay
+    overlay.setMap(this.amap)
+  }
+
+  removeOverlayById (type: string, gmapId: string) {
+    let overlay = this.getOverlays(type)[gmapId]
+    if (!overlay) {
+      console.warn(type + '[gmap_id: ' + gmapId + '] is not found.')
+      return
+    }
+    
+    overlay.setMap(null)
+    overlay.gmap_group && this.delFromOverlayGroup(overlay)
+    delete this.getOverlays(type)[overlay.gmap_id]
   }
   
   getOverlays = (type: string) => this.overlays[type]
+  
+  clearOverlays (type: string) {
+    for (let id in this.overlays[type]) {
+      this.removeOverlayById(type, id)
+    }
+  }
   
   addToOverlayGroup (ol: any, groupName: string) {
     let group = this.overlayGroups[groupName]
@@ -102,18 +126,7 @@ export default class GMap {
     group && group.removeOverlay(overlay)
   }
   
-  clearOverlays (type: string) {
-    let ols = this.overlays[type]
-    for (let id in ols) {
-      let ol = ols[id]
-      ol.setMap(null)
-      if (ol.gmap_group) {
-        this.overlayGroups[ol.gmap_group].removeOverlay(ol)
-      }
-      delete ols[id]
-    }
-  }
-  
+  getAMap = () => this.amap
   getMarker = (gmapId: string) => this.getOverlays(Types.TYPE_MARKER)[gmapId]
   getPolyline = (gmapId: string) => this.getOverlays(Types.TYPE_POLYLINE)[gmapId]
   getPolygon = (gmapId: string) => this.getOverlays(Types.TYPE_POLYGON)[gmapId]
@@ -125,18 +138,6 @@ export default class GMap {
   removePolygon = (gmapId: string) => this.removeOverlayById(Types.TYPE_POLYGON, gmapId)
   removeCircle = (gmapId: string) => this.removeOverlayById(Types.TYPE_CIRCLE, gmapId)
   removeRectangle = (gmapId: string) => this.removeOverlayById(Types.TYPE_RECTANGLE, gmapId)
-
-  removeOverlayById (type: string, gmapId: string) {
-    let overlay = this.getOverlays(type)[gmapId]
-    if (!overlay) {
-      console.warn(type + '[gmap_id: ' + gmapId + '] is not found.')
-      return
-    }
-    
-    overlay.setMap(null)
-    overlay.gmap_group && this.delFromOverlayGroup(overlay)
-    delete this.getOverlays(type)[overlay.gmap_id]
-  }
   
   destroy = () => this.amap && this.amap.destroy()
   setZoom = (zoom: number) => this.amap.setZoom(zoom)
@@ -146,60 +147,4 @@ export default class GMap {
   on = (eventName: string, callback) => this.amap.on(eventName, callback)
   showOverlayGroup = groupName => this.overlayGroups[groupName] && this.overlayGroups[groupName].show()
   hideOverlayGroup = groupName => this.overlayGroups[groupName] && this.overlayGroups[groupName].hide()
-  
-  /**
-   * 画点标记
-   * 将已有的跟将要画的按id进行比较：
-   * 1）原来有，现在没有的，删除；
-   * 2）原来有，现在也有的，刷新；
-   * 3）原来没有，现在有的，添加。
-   */
-  drawMarkers (options: Types.MarkerOptions[]) {
-    console.log('map draw markers')
-    
-    let mkoptions = options ? options : [] 
-    let curMarkers = this.getOverlays(Types.TYPE_MARKER)
-    
-    // 查找已经存在的，进行刷新
-    for (let i = 0; i < mkoptions.length; i++) {
-      let marker = curMarkers[mkoptions[i].id]
-      if (marker) {
-        this.painter.refreshMarker(marker, mkoptions[i])
-        mkoptions[i]._refreshed = true
-        marker.gmap_refreshed = true
-      }
-    }
-      
-    // 删除那些没有被刷新的Marker
-    for (let id in curMarkers) {
-      if (!curMarkers[id].gmap_refreshed) {
-        curMarkers[id].setMap(null)
-        delete curMarkers[id]
-      } else {
-        delete curMarkers[id].gmap_refreshed
-      }
-    }
-    
-    this.painter.drawMarkers(mkoptions)
-  }
-  
-  drawPolylines (options) {
-    this.clearOverlays(Types.TYPE_POLYLINE)
-    options && this.painter.drawPolylines(options)
-  }
-   
-  drawPolygons (options) {
-    this.clearOverlays(Types.TYPE_POLYGON)
-    options && this.painter.drawPolygons(options)
-  }
-  
-  drawCircles (options) {
-    this.clearOverlays(Types.TYPE_CIRCLE)
-    options && this.painter.drawCircles(options)
-  }
-  
-  drawRectangles (options) {
-    this.clearOverlays(Types.TYPE_RECTANGLE)
-    options && this.painter.drawRectangles(options)
-  }
 }
