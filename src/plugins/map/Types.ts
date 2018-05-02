@@ -6,6 +6,7 @@ export const TYPE_POLYLINE = 'Polyline'
 export const TYPE_POLYGON = 'Polygon'
 export const TYPE_CIRCLE = 'Circle'
 export const TYPE_RECTANGLE = 'Rectangle'
+export const TYPE_TEXT = 'Text'
 
 export interface MarkerOptions {
   // 最好要有id，且id不能重复
@@ -251,6 +252,41 @@ export interface RectangleOptions {
   label?: string
   
   // 点击矩形之后弹出的信息
+  message?: string
+  
+  // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
+  group?: string
+}
+
+export interface TextOptions {
+  // 最好要有id，且id不能重复
+  id?: string
+  
+  // 文本内容
+  text: string
+  
+  // 位置
+  position: number[]
+  
+  // 横向上position位于text的位置，'left' 'right', 'center'，默认center
+  textAlign?: string
+  
+  // 纵向position位于text的位置，'top' 'middle', 'bottom'，默认middle
+  verticalAlign?: string
+  
+  // 旋转角度
+  angle?: number
+  
+  // 样式
+  style?: any
+  
+  // 鼠标悬停时的鼠标样式
+  cursor?: string
+  
+  // 文本覆盖物的叠加顺序
+  zIndex?: string
+  
+  // 点击文本之后弹出的信息
   message?: string
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏

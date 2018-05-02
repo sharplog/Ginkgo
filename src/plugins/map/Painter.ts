@@ -130,6 +130,19 @@ export default class Painter {
     }
   }
   
+  drawTexts (options: any[]) {
+    this.gmap.clearOverlays(Types.TYPE_TEXT)
+    
+    if (!options) return
+    
+    for (let option of options) {
+      if (!option.cursor) option.cursor = 'pointer'
+      
+      let text = new AMap.Text(option)
+      this.addOverlay(Types.TYPE_TEXT, text, option)
+    }
+  }
+  
   addOverlay (type: string, overlay: any, option: any) {
     overlay.gmap_message = option.message
     overlay.on('click', showMessage)

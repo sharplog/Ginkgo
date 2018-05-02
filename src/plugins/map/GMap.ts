@@ -26,7 +26,8 @@ export default class GMap {
     [Types.TYPE_POLYLINE]: {},
     [Types.TYPE_POLYGON]: {},
     [Types.TYPE_CIRCLE]: {},
-    [Types.TYPE_RECTANGLE]: {}
+    [Types.TYPE_RECTANGLE]: {},
+    [Types.TYPE_TEXT]: {}
   }
     
   // 覆盖物分组，便于控制
