@@ -156,13 +156,23 @@ export default class Map extends Vue {
     lineStyle: {},
     
     // 走过的轨迹线的样式
-    passedLineStyle: {},
+    passedLineStyle: { strokeStyle: 'red' },
     
     // 回放器的样式
     navigatorStyle: {
-      loop: true, // 循环播放
-      speed: 1000 // 巡航速度，单位千米/小时
+      width: 32, // 巡航器形状宽度
+
+      height: 15, // 巡航器形状高度
+
+      initRotateDegree: 90,
+      icon: '/static/img/car.png'
     },
+    
+    // 循环播放
+    loop: false,
+    
+    // 巡航速度，单位千米/小时
+    speed: 1000000,
     
     // 加载了数据后是否自动进行回放，默认自动回放
     autoStart: true
