@@ -87,6 +87,7 @@ export default class Tracker {
         
         renderOptions: {
           pathLineStyle: _this.lineStyle,
+          pathLineHoverStyle: emptyLineStyle,
           renderAllPointsIfNumberBelow: 100, // 绘制路线节点，如不需要可设置为-1
           
           // 每条轨迹线可能会有自己的样式
