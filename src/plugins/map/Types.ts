@@ -292,3 +292,66 @@ export interface TextOptions {
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string
 }
+
+// 轨迹线上每个点的数据
+export interface TrackPointData {
+  // 位置
+  position: number[]
+  
+  // 时间
+  time: string
+  
+  // 速度，公里/小时
+  speed: number
+  
+  // 如果有图标，则单独画这个点，可设置label
+  icon?: string
+  
+  // 显示图标时的label
+  label?: string
+  
+  // 除了时间和速度之外的显示信息
+  message?: string
+}
+
+// 轨迹线数据
+export interface TrackPath {
+  // 本轨迹线的名字，比如叫：已洒水路段
+  name: string
+  
+  // 轨迹线样式，没有自己的就用轨迹的样式
+  lineStyle: any
+  
+  // 走过的轨迹线的样式，没有自己的就用轨迹的样式
+  passedLineStyle: any
+  
+  // 数据
+  path: TrackPointData[]
+}
+
+/**
+ * 轨迹数据。
+ * 可有多条轨迹线，合成一条轨迹。比如行车过程中的超速行驶的路段，就需要用单独的轨迹线。
+ * 回放时，所有轨迹线连在一起，依次回放
+ */
+export interface TrackData {
+  // 轨迹线
+  paths: TrackPath[]
+}
+
+/**
+ * 回放器配置
+ */
+export interface TrackerOptions {
+  // 轨迹线的样式，默认不显示
+  lineStyle: any
+  
+  // 走过的轨迹线的样式
+  passedLineStyle: any
+  
+  // 回放器的样式
+  navigatorStyle: any
+  
+  // 加载了数据后是否自动进行回放，默认自动回放
+  autoStart?: boolean
+}

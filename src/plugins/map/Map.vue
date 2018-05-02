@@ -7,7 +7,7 @@
 import {Component, Prop, Watch, Vue} from 'vue-property-decorator'
 import GMap from './GMap'
 import Painter from './Painter'
-// import Tracker from './Tracker'
+import Tracker from './Tracker'
 // import Editer from './Editer'
 
 @Component
@@ -18,7 +18,7 @@ export default class GinkgoMap extends Vue {
   _tracker: any
   _editer: any
   
-  @Prop() gmapObj: any
+  @Prop() gmapObj: GMap
   @Prop() options: any
   @Prop() zoom: number
   @Prop() center: number[]
@@ -30,7 +30,7 @@ export default class GinkgoMap extends Vue {
   @Prop() texts: any[]
   @Prop() trackData: any
   @Prop() trackOptions: any
-  @Prop() tracker: any
+  @Prop() tracker: Tracker
   
   mounted () {
     let options = this.options ? this.options : {}
@@ -54,6 +54,7 @@ export default class GinkgoMap extends Vue {
     this.drawPolylines()
     this.drawMarkers()
     this.drawTexts()
+    
     this.playback()
   }
   
@@ -63,13 +64,14 @@ export default class GinkgoMap extends Vue {
   
   @Watch('trackData')
   playback () {
-  /*
     if (!this._tracker) {
-      this._tracker = this.gmap.createTracker(this.trackOptions)
+      let opts: any = this.trackOptions ? this.trackOptions : {}
+      opts._trackData = this.trackData
+      this._tracker = new Tracker(opts, this.gmap.getAMap())
       this.$emit('update:tracker', this._tracker)
+    } else {
+      this._tracker.playback(this.trackData)
     }
-    this._tracker.playback(this.trackData)
-  */
   }
   
   @Watch('markers')

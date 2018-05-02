@@ -15,7 +15,8 @@
       <!-- 画线面时，设置样式。回放时能够控制 -->
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
-        :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles" :texts="texts">
+        :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles" :texts="texts"
+        :trackData="trackData" :trackOptions="trackOptions" :tracker.sync="tracker">
     </ginkgo-map>
   </div>
 </template>
@@ -34,6 +35,7 @@ export default class Map extends Vue {
   gmap: any = {}
   zoom: number = 11
   center: number[] = [117.12224, 36.67429]
+  tracker: any = {}
   
   markers: any[] = [
     { id: 'mk1',
@@ -148,6 +150,81 @@ export default class Map extends Vue {
       }
     }
   ]
+  
+  trackOptions = {
+    // 轨迹线的样式，默认不显示
+    lineStyle: {},
+    
+    // 走过的轨迹线的样式
+    passedLineStyle: {},
+    
+    // 回放器的样式
+    navigatorStyle: {
+      loop: true, // 循环播放
+      speed: 1000 // 巡航速度，单位千米/小时
+    },
+    
+    // 加载了数据后是否自动进行回放，默认自动回放
+    autoStart: true
+  }
+  
+  trackData = {
+    paths: [{
+      name: '飞行路线0',
+      path: [
+        {time: '10:10:00',
+          speed: 1000,
+          position: [116.405289, 39.904987],
+          message: '第一个点'
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [113.964458, 40.54664]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [111.47836, 41.135964]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [108.949297, 41.670904]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [106.380111, 42.149509]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [103.774185, 42.56996]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [101.135432, 42.930601]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [98.46826, 43.229964],
+          message: '中间的点啊'
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [95.777529, 43.466798]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [93.068486, 43.64009]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [90.34669, 43.749086]
+        },
+        {time: '10:10:00',
+          speed: 1000,
+          position: [87.61792, 43.793308]
+        }
+      ]
+    }]
+  }
   
   mapOptions: any = {
     resizeEnable: true,
