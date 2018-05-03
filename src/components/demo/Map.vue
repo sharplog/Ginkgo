@@ -18,6 +18,7 @@
       <button @click="restart">重放</button>
       <button @click="speedUp">加速</button>
       <button @click="speedDown">减速</button>
+      <button @click="clearback">清除轨迹</button>
       <!-- 画线面时，设置样式。回放时能够控制 -->
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
@@ -372,6 +373,10 @@ export default class Map extends Vue {
   }
 
   playback () { this.trackData = this.trackData1 }
+  clearback () {
+    // this.tracker.clear() 不需要这个
+    this.trackData = null
+  }
   pause () {
     this.tracker.pause()
   } 

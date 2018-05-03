@@ -106,12 +106,16 @@ export default class Tracker {
 
           // 每条轨迹线可能会有自己的样式
           getPathStyle: function (pathItem, zoom) {
-            return {
+            let style: any = {
               pathLineStyle: pathItem.pathData.lineStyle ? pathItem.pathData.lineStyle : {}, 
               pathNavigatorStyle: {
                 pathLinePassedStyle: pathItem.pathData.linePassedStyle ? pathItem.pathData.linePassedStyle : {}
               }
             }
+            let kps = _this.pathSimplifierIns.getRenderOption('keyPointStyle')
+            if (pathItem.pathIndex > 0) style.startPointStyle = kps
+            if (pathItem.pathIndex < _this.lineNumber - 1) style.endPointStyle = kps
+            return style
           }
         }
       })
@@ -125,7 +129,10 @@ export default class Tracker {
   playback (data: Types.TrackData) {
     this.pathSimplifierIns.clearPathNavigators()
 
-    if (!data || !data.paths) return
+    if (!data || !data.paths) {
+      this.pathSimplifierIns.setData(null)
+      return
+    }
 
     // 设置数据
     this.pathSimplifierIns.setData(data.paths)
@@ -201,4 +208,6 @@ export default class Tracker {
       this.navigators[i].setOption('speed', speed)
     }
   }
+
+  clear () { this.playback(null) }
 }
