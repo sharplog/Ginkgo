@@ -168,9 +168,9 @@ export default class Map extends Vue {
     
     // 回放器的样式
     navigatorStyle: {
-      width: 32, // 巡航器形状宽度
+      // width: 32, // 巡航器形状宽度，指定了icon后，可以不指定宽度和高度，采用icon的原始大小
 
-      height: 15, // 巡航器形状高度
+      // height: 15, // 巡航器形状高度
 
       initRotateDegree: 90,
       icon: '/static/img/car.png'

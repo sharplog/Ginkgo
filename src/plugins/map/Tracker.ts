@@ -51,7 +51,7 @@ export default class Tracker {
   speed: number = 1000
 
   hideNavi = { width: 0, height: 0 }
-  showNavi = {}
+  showNavi = { width: 0, height: 0 }
   
   constructor (options: Types.TrackerOptions, private amap: any, data?: Types.TrackData) {
     copy(options.lineStyle, this.lineStyle)
@@ -63,65 +63,84 @@ export default class Tracker {
     if (options.speed > 0) this.speed = options.speed
     this.showNavi = { width: this.navigatorStyle.width, height: this.navigatorStyle.height }
     
-    let _this = this
-    
     AMapUI.load('ui/misc/PathSimplifier', PathSimplifier => {
       if (!PathSimplifier.supportCanvas) {
         alert('当前环境不支持 Canvas！')
         return
       }
     
-      if (_this.navigatorStyle.icon) {
-        _this.navigatorStyle.content = PathSimplifier.Render.Canvas.getImageContent(_this.navigatorStyle.icon)
-      }
-
-      _this.pathSimplifierIns = new PathSimplifier({
-        zIndex: 100,
-        map: amap, 
-
-        getPath: function (pathData: Types.TrackPath, pathIndex: number) {
-          let path: number[][] = []
-          for (let i in pathData.path) {
-            path.push(pathData.path[i].position)
-          }
-          return path
-        },
-        
-        getHoverTitle: function (pathData: Types.TrackPath, pathIndex: number, pointIndex: number) {
-          if (pointIndex >= 0) {
-            let pointData = pathData.path[pointIndex]
-            let msg = '时间:' + pointData.time + '，速度:' + pointData.speed
-            if (pointData.message) msg += '<br/>' + pointData.message
-            return msg
-          } 
-          
-          return pathData.name
-        },
-        
-        renderOptions: {
-          pathLineStyle: _this.lineStyle,
-          pathLineHoverStyle: emptyLineStyle,
-          renderAllPointsIfNumberBelow: 100, // 绘制路线节点，如不需要可设置为-1
-          pathNavigatorStyle: _this.navigatorStyle,
-
-          // 每条轨迹线可能会有自己的样式
-          getPathStyle: function (pathItem, zoom) {
-            let style: any = {
-              pathLineStyle: pathItem.pathData.lineStyle ? pathItem.pathData.lineStyle : {}, 
-              pathNavigatorStyle: {
-                pathLinePassedStyle: pathItem.pathData.linePassedStyle ? pathItem.pathData.linePassedStyle : {}
-              }
-            }
-            let kps = _this.pathSimplifierIns.getRenderOption('keyPointStyle')
-            if (pathItem.pathIndex > 0) style.startPointStyle = kps
-            if (pathItem.pathIndex < _this.lineNumber - 1) style.endPointStyle = kps
-            return style
-          }
-        }
-      })
+      this.initPage(PathSimplifier)
 
       if (data) {
-        _this.playback(data)
+        this.playback(data)
+      }
+    })
+  }
+ 
+  onIconLoad () {
+    let this0 = this
+    return function () {
+      // 如果没有设置icon的大小
+      if (!this0.showNavi.width) {
+        this0.showNavi = { width: this.width, height: this.height }
+      }
+      this0.pathSimplifierIns.renderLater()
+    }
+  }
+
+  onIconError (e) {
+    alert('轨迹回放图标载失败！')
+  }
+
+  initPage (PathSimplifier) {
+    if (this.navigatorStyle.icon) {
+      this.navigatorStyle.content = PathSimplifier.Render.Canvas.getImageContent(this.navigatorStyle.icon,
+        this.onIconLoad(), this.onIconError)
+    }
+
+    let this0 = this
+    this.pathSimplifierIns = new PathSimplifier({
+      zIndex: 100,
+      map: this.amap, 
+
+      getPath: function (pathData: Types.TrackPath, pathIndex: number) {
+        let path: number[][] = []
+        for (let i in pathData.path) {
+          path.push(pathData.path[i].position)
+        }
+        return path
+      },
+      
+      getHoverTitle: function (pathData: Types.TrackPath, pathIndex: number, pointIndex: number) {
+        if (pointIndex >= 0) {
+          let pointData = pathData.path[pointIndex]
+          let msg = '时间:' + pointData.time + '，速度:' + pointData.speed
+          if (pointData.message) msg += '<br/>' + pointData.message
+          return msg
+        } 
+        
+        return pathData.name
+      },
+      
+      renderOptions: {
+        pathLineStyle: this.lineStyle,
+        pathLineHoverStyle: emptyLineStyle,
+        renderAllPointsIfNumberBelow: 100, // 绘制路线节点，如不需要可设置为-1
+        pathNavigatorStyle: this.navigatorStyle,
+
+        // 每条轨迹线可能会有自己的样式
+        getPathStyle: function (pathItem, zoom) {
+          let style: any = {
+            pathLineStyle: pathItem.pathData.lineStyle ? pathItem.pathData.lineStyle : {}, 
+            pathNavigatorStyle: {
+              pathLinePassedStyle: pathItem.pathData.linePassedStyle ? pathItem.pathData.linePassedStyle : {}
+            }
+          }
+          let kps = this0.pathSimplifierIns.getRenderOption('keyPointStyle')
+          if (pathItem.pathIndex > 0) style.startPointStyle = kps
+          if (pathItem.pathIndex < this0.lineNumber - 1) style.endPointStyle = kps
+          return style
+        }
       }
     })
   }
@@ -140,11 +159,11 @@ export default class Tracker {
 
     // 对每一条线路创建一个巡航器
     this.navigators[0] = this.pathSimplifierIns.createPathNavigator(0, {
-      loop: this.loop, speed: this.speed
+      loop: this.loop, speed: this.speed, pathNavigatorStyle: this.showNavi
     })
     for (let i = 1; i < this.lineNumber; i++) {
       this.navigators[i] = this.pathSimplifierIns.createPathNavigator(i, {
-        loop: this.loop, speed: this.speed, pathNavigatorStyle: { width: 0, height: 0 }
+        loop: this.loop, speed: this.speed, pathNavigatorStyle: this.hideNavi
       })
     }
     this.startNextNavi(0)
