@@ -25,7 +25,10 @@ function copy (from, to) {
         
 export default class Tracker {
   pathSimplifierIns: any
-  navigator: any
+  navigators: any[] = []
+
+  // 轨迹线的数量
+  lineNumber: number
   
   // 轨迹线的样式，默认不显示
   lineStyle: any = {}
@@ -61,6 +64,10 @@ export default class Tracker {
         alert('当前环境不支持 Canvas！')
         return
       }
+    
+      if (_this.navigatorStyle.icon) {
+        _this.navigatorStyle.content = PathSimplifier.Render.Canvas.getImageContent(_this.navigatorStyle.icon)
+      }
 
       _this.pathSimplifierIns = new PathSimplifier({
         zIndex: 100,
@@ -89,22 +96,19 @@ export default class Tracker {
           pathLineStyle: _this.lineStyle,
           pathLineHoverStyle: emptyLineStyle,
           renderAllPointsIfNumberBelow: 100, // 绘制路线节点，如不需要可设置为-1
-          
+          pathNavigatorStyle: _this.navigatorStyle,
+
           // 每条轨迹线可能会有自己的样式
           getPathStyle: function (pathItem, zoom) {
             return {
-              pathLineStyle: pathItem.lineStyle ? pathItem.lineStyle : {}, 
+              pathLineStyle: pathItem.pathData.lineStyle ? pathItem.pathData.lineStyle : {}, 
               pathNavigatorStyle: {
-                pathLinePassedStyle: pathItem.passedLineStyle ? pathItem.passedLineStyle : {}
+                pathLinePassedStyle: pathItem.pathData.passedLineStyle ? pathItem.pathData.passedLineStyle : {}
               }
             }
           }
         }
       })
-    
-      if (_this.navigatorStyle.icon) {
-        _this.navigatorStyle.content = PathSimplifier.Render.Canvas.getImageContent(_this.navigatorStyle.icon)
-      }
 
       if (options._trackData) {
         _this.playback(options._trackData)
@@ -115,12 +119,28 @@ export default class Tracker {
   playback (data: Types.TrackData) {
     // 设置数据
     this.pathSimplifierIns.setData(data.paths)
+    this.lineNumber = data.paths.length
 
-    // 对第一条线路（即索引 0）创建一个巡航器
-    this.navigator = this.pathSimplifierIns.createPathNavigator(0, {
-      loop: this.loop, speed: this.speed, pathNavigatorStyle: this.navigatorStyle
+    // 对每一条线路创建一个巡航器
+    this.navigators[0] = this.pathSimplifierIns.createPathNavigator(0, {
+      loop: this.loop, speed: this.speed
     })
+    this.startNextNavi(0)
 
-    this.autoStart && this.navigator.start()
+    this.autoStart && this.navigators[0].start()
+  }
+
+  startNextNavi (curIndex: number) {
+    if (curIndex === this.lineNumber - 1) return
+
+    this.navigators[curIndex].on('pause', event => {
+      console.log('navi pause: ' + curIndex + ' ' + event.type)
+      this.navigators[curIndex + 1] = this.pathSimplifierIns.createPathNavigator(curIndex + 1, {
+        loop: this.loop, speed: this.speed
+      })
+      this.navigators[curIndex].setOption('pathNavigatorStyle', { width: 0, height: 0 })
+      this.startNextNavi(curIndex + 1)
+      this.navigators[curIndex + 1].start()
+    })
   }
 }
