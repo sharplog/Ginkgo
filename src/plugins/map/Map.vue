@@ -66,8 +66,7 @@ export default class GinkgoMap extends Vue {
   playback () {
     if (!this._tracker) {
       let opts: any = this.trackOptions ? this.trackOptions : {}
-      opts._trackData = this.trackData
-      this._tracker = new Tracker(opts, this.gmap.getAMap())
+      this._tracker = new Tracker(opts, this.gmap.getAMap(), this.trackData)
       this.$emit('update:tracker', this._tracker)
     } else {
       this._tracker.playback(this.trackData)

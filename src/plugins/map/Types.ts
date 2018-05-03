@@ -351,6 +351,12 @@ export interface TrackerOptions {
   
   // 回放器的样式
   navigatorStyle: any
+    
+  // 循环播放，默认为false
+  loop?: boolean
+  
+  // 巡航速度，单位千米/小时
+  speed: number
   
   // 加载了数据后是否自动进行回放，默认自动回放
   autoStart?: boolean

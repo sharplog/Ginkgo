@@ -53,7 +53,7 @@ export default class Tracker {
   hideNavi = { width: 0, height: 0 }
   showNavi = {}
   
-  constructor (options: any, private amap: any) {
+  constructor (options: Types.TrackerOptions, private amap: any, data?: Types.TrackData) {
     copy(options.lineStyle, this.lineStyle)
     copy(options.linePassedStyle, this.linePassedStyle)
     copy(options.navigatorStyle, this.navigatorStyle)
@@ -120,8 +120,8 @@ export default class Tracker {
         }
       })
 
-      if (options._trackData) {
-        _this.playback(options._trackData)
+      if (data) {
+        _this.playback(data)
       }
     })
   }
