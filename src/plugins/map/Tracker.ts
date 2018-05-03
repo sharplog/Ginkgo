@@ -123,6 +123,10 @@ export default class Tracker {
   }
   
   playback (data: Types.TrackData) {
+    this.pathSimplifierIns.clearPathNavigators()
+
+    if (!data || !data.paths) return
+
     // 设置数据
     this.pathSimplifierIns.setData(data.paths)
     this.lineNumber = data.paths.length

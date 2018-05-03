@@ -11,7 +11,7 @@
       <button @click="rmMakerLine">新建面</button>
       <button @click="rmMakerLine">新建圆</button>
       <button @click="rmMakerLine">新建矩形</button>
-      <button @click="rmMakerLine">轨迹回放</button>
+      <button @click="playback">轨迹回放</button>
       <button @click="pause">暂停</button>
       <button @click="resume">继续</button>
       <button @click="stop">停止</button>
@@ -186,6 +186,9 @@ export default class Map extends Vue {
   }
   
   trackData = {
+  }
+
+  trackData1 = {
     paths: [{
       name: '行驶路线1',
       path: [
@@ -368,11 +371,13 @@ export default class Map extends Vue {
     this.texts = null
   }
 
+  playback () { this.trackData = this.trackData1 }
   pause () {
     this.tracker.pause()
   } 
   resume () { this.tracker.resume() }
   stop () { this.tracker.stop() }
+  start () { this.tracker.start() }
   restart () { this.tracker.restart() }
   speedUp () {
     this.speed += 100
