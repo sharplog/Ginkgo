@@ -304,12 +304,6 @@ export interface TrackPointData {
   // 速度，公里/小时
   speed: number
   
-  // 如果有图标，则单独画这个点，可设置label
-  icon?: string
-  
-  // 显示图标时的label
-  label?: string
-  
   // 除了时间和速度之外的显示信息
   message?: string
 }
