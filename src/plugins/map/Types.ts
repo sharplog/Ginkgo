@@ -323,7 +323,7 @@ export interface TrackPath {
   lineStyle: any
   
   // 走过的轨迹线的样式，没有自己的就用轨迹的样式
-  passedLineStyle: any
+  linePassedStyle: any
   
   // 数据
   path: TrackPointData[]
@@ -347,7 +347,7 @@ export interface TrackerOptions {
   lineStyle: any
   
   // 走过的轨迹线的样式
-  passedLineStyle: any
+  linePassedStyle: any
   
   // 回放器的样式
   navigatorStyle: any

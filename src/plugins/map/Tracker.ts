@@ -26,6 +26,8 @@ function copy (from, to) {
 export default class Tracker {
   pathSimplifierIns: any
   navigators: any[] = []
+  curNavigator: any
+  isManulPaused: boolean = false
 
   // 轨迹线的数量
   lineNumber: number
@@ -34,7 +36,7 @@ export default class Tracker {
   lineStyle: any = {}
   
   // 走过的轨迹线的样式
-  passedLineStyle: any = {}
+  linePassedStyle: any = {}
   
   // 回放器的样式
   navigatorStyle: any = {}
@@ -47,15 +49,19 @@ export default class Tracker {
   
   // 巡航速度，单位千米/小时
   speed: number = 1000
+
+  hideNavi = { width: 0, height: 0 }
+  showNavi = {}
   
   constructor (options: any, private amap: any) {
     copy(options.lineStyle, this.lineStyle)
-    copy(options.passedLineStyle, this.passedLineStyle)
+    copy(options.linePassedStyle, this.linePassedStyle)
     copy(options.navigatorStyle, this.navigatorStyle)
-    this.navigatorStyle.pathLinePassedStyle = this.passedLineStyle
+    this.navigatorStyle.pathLinePassedStyle = this.linePassedStyle
     this.autoStart = !(options.autoStart === false)
     this.loop = (options.loop === true)
     if (options.speed > 0) this.speed = options.speed
+    this.showNavi = { width: this.navigatorStyle.width, height: this.navigatorStyle.height }
     
     let _this = this
     
@@ -103,7 +109,7 @@ export default class Tracker {
             return {
               pathLineStyle: pathItem.pathData.lineStyle ? pathItem.pathData.lineStyle : {}, 
               pathNavigatorStyle: {
-                pathLinePassedStyle: pathItem.pathData.passedLineStyle ? pathItem.pathData.passedLineStyle : {}
+                pathLinePassedStyle: pathItem.pathData.linePassedStyle ? pathItem.pathData.linePassedStyle : {}
               }
             }
           }
@@ -125,9 +131,14 @@ export default class Tracker {
     this.navigators[0] = this.pathSimplifierIns.createPathNavigator(0, {
       loop: this.loop, speed: this.speed
     })
+    for (let i = 1; i < this.lineNumber; i++) {
+      this.navigators[i] = this.pathSimplifierIns.createPathNavigator(i, {
+        loop: this.loop, speed: this.speed, pathNavigatorStyle: { width: 0, height: 0 }
+      })
+    }
     this.startNextNavi(0)
 
-    this.autoStart && this.navigators[0].start()
+    this.autoStart && this.start()
   }
 
   startNextNavi (curIndex: number) {
@@ -135,12 +146,55 @@ export default class Tracker {
 
     this.navigators[curIndex].on('pause', event => {
       console.log('navi pause: ' + curIndex + ' ' + event.type)
-      this.navigators[curIndex + 1] = this.pathSimplifierIns.createPathNavigator(curIndex + 1, {
-        loop: this.loop, speed: this.speed
-      })
-      this.navigators[curIndex].setOption('pathNavigatorStyle', { width: 0, height: 0 })
+      // 如果是手动暂停的，不自动回放下一条轨迹
+      if (this.isManulPaused) return
+
+      this.navigators[curIndex + 1].setOption('pathNavigatorStyle', this.showNavi)
+      this.navigators[curIndex].setOption('pathNavigatorStyle', this.hideNavi)
       this.startNextNavi(curIndex + 1)
+
+      this.curNavigator = this.navigators[curIndex + 1]
       this.navigators[curIndex + 1].start()
     })
+  }
+
+  start () {
+    this.isManulPaused = false
+
+    if (this.curNavigator && this.curNavigator !== this.navigators[0]) {
+      this.curNavigator.setOption('pathNavigatorStyle', this.hideNavi)
+      this.navigators[0].setOption('pathNavigatorStyle', this.showNavi)
+    }
+
+    this.curNavigator = this.navigators[0]
+    this.navigators[0].start()
+  }
+
+  pause () {
+    this.isManulPaused = true
+    this.curNavigator.pause()
+  }
+
+  resume () {
+    this.isManulPaused = false
+    this.curNavigator.resume()
+  }
+
+  stop () {
+    this.isManulPaused = false
+    for (let i = 0; i < this.lineNumber; i++) {
+      this.navigators[i].stop()
+    }
+  }
+
+  restart () {
+    this.stop()
+    this.start()
+  }
+
+  setSpeed (speed: number) {
+    for (let i = 0; i < this.lineNumber; i++) {
+      this.navigators[i].setOption('speed', speed)
+    }
   }
 }

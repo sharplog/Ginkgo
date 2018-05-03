@@ -12,6 +12,12 @@
       <button @click="rmMakerLine">新建圆</button>
       <button @click="rmMakerLine">新建矩形</button>
       <button @click="rmMakerLine">轨迹回放</button>
+      <button @click="pause">暂停</button>
+      <button @click="resume">继续</button>
+      <button @click="stop">停止</button>
+      <button @click="restart">重放</button>
+      <button @click="speedUp">加速</button>
+      <button @click="speedDown">减速</button>
       <!-- 画线面时，设置样式。回放时能够控制 -->
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
@@ -36,6 +42,7 @@ export default class Map extends Vue {
   zoom: number = 11
   center: number[] = [117.12224, 36.67429]
   tracker: any = {}
+  speed: number = 500
   
   markers: any[] = [
     { id: 'mk1',
@@ -156,7 +163,7 @@ export default class Map extends Vue {
     lineStyle: {},
     
     // 走过的轨迹线的样式
-    passedLineStyle: { strokeStyle: 'red' },
+    linePassedStyle: { strokeStyle: 'red' },
     
     // 回放器的样式
     navigatorStyle: {
@@ -172,7 +179,7 @@ export default class Map extends Vue {
     loop: false,
     
     // 巡航速度，单位千米/小时
-    speed: 500,
+    speed: this.speed,
     
     // 加载了数据后是否自动进行回放，默认自动回放
     autoStart: true
@@ -246,7 +253,7 @@ export default class Map extends Vue {
     },
     {
       name: '行驶路线2',
-      passedLineStyle: { strokeStyle: 'green' },
+      linePassedStyle: { strokeStyle: 'green' },
       path: [
         {time: '10:10:00',
           speed: 1000,
@@ -359,6 +366,22 @@ export default class Map extends Vue {
     // let undefined: any
     this.rectangles = undefined
     this.texts = null
+  }
+
+  pause () {
+    this.tracker.pause()
+  } 
+  resume () { this.tracker.resume() }
+  stop () { this.tracker.stop() }
+  restart () { this.tracker.restart() }
+  speedUp () {
+    this.speed += 100
+    this.tracker.setSpeed(this.speed)
+  }
+  speedDown () {
+    if (this.speed < 100) return
+    this.speed -= 100
+    this.tracker.setSpeed(this.speed)
   }
 }
 
