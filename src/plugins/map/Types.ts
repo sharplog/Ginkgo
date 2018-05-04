@@ -8,6 +8,11 @@ export const TYPE_CIRCLE = 'Circle'
 export const TYPE_RECTANGLE = 'Rectangle'
 export const TYPE_TEXT = 'Text'
 
+// 地图采用的坐标系
+export const COOR_WGS84 = 1
+export const COOR_GCJ02 = 2
+export const COOR_BD09 = 3
+
 export interface MarkerOptions {
   // 最好要有id，且id不能重复
   id?: string
@@ -337,7 +342,7 @@ export interface TrackData {
  * 回放器配置
  */
 export interface TrackerOptions {
-  // 轨迹线的样式，默认不显示
+  // 轨迹线的样式
   lineStyle: any
   
   // 走过的轨迹线的样式
