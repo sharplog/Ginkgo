@@ -9,15 +9,29 @@ import GMap from './GMap'
 import * as Types from './Types'
 
 let win: any = window
+let AMap: any = win.AMap
 let AMapUI: any = win.AMapUI
 
 export default class Editer {
   amap: any
   posPicker: any
+  polyEditor: any
+  circleEditor: any
+  rectangleEditor: any
 
   // 被编辑的Marker及其位置
   marker: any
   markerPosition: any
+  // 被编辑的Polyline或Polygon
+  poly: any
+  polyPath: any
+  // 被编辑的Circle
+  circle: any
+  circleCenter: any
+  circleRadius: number
+  // 被编辑的Rectangle
+  rectangle: any
+  rectangleBound: any
 
   constructor (private gmap: GMap, private handler: any) {
     this.amap = gmap.getAMap()
@@ -63,12 +77,78 @@ export default class Editer {
     this.createMarker(marker, this.marker.getPosition())
   }
 
+  createPolyline (options: any) {
+    this.cancelEdit()
+
+    let data = this.getInitData()
+    options.path = [data.sw, data.ne]
+    options.map = this.amap
+    this.poly = new AMap.Polyline(options)
+    this.polyPath = null
+    this.editPoly(this.poly)
+  }
+
+  editPolyline (lineId: string) {
+    this.cancelEdit()
+
+    this.poly = this.gmap.getPolyline(lineId)
+    if (!this.poly) {
+      console.error('Can not find Polyline[id: ' + lineId + ']')
+      return
+    }
+    this.polyPath = []
+    for (let pos of this.poly.getPath()) {
+      this.polyPath.push([pos.getLng(), pos.getLat()])
+    }
+    this.editPoly(this.poly)
+  }
+
+  editPoly (poly: any) {
+    this.polyEditor = new AMap.PolyEditor(this.amap, poly)
+    this.polyEditor.on('addnode', this.handler)
+    this.polyEditor.on('adjust', this.handler)
+    this.polyEditor.on('removenode', this.handler)
+    this.polyEditor.on('end', this.handler)
+    this.polyEditor.open()
+  }
+
+  getInitData () {
+    let amap: any = this.gmap.getAMap()
+    let center = amap.getCenter()
+    let zoom = amap.getZoom()
+    let cenPixel = amap.lnglatToPixel(center, zoom)
+    let x = cenPixel.getX()
+    let y = cenPixel.getY()
+    let swPixel = new AMap.Pixel(x - 100, y + 60)
+    let nePixel = new AMap.Pixel(x + 100, y - 60)
+    let sw = amap.pixelToLngLat(swPixel, zoom)
+    let ne = amap.pixelToLngLat(nePixel, zoom)
+    return { sw: sw, ne: ne, radius: center.distance(ne) }
+  }
+
   cancelEdit () {
     this.stopEditMarker(false)
+    this.stopEditPoly(false)
   }
 
   finishEdit () {
     this.stopEditMarker(true)
+    this.stopEditPoly(true)
+  }
+
+  stopEditPoly (finished: boolean) {
+    if (this.polyEditor) {
+      this.polyEditor.close()
+      delete this.polyEditor
+
+      // 如果是对原来图形的编辑
+      if (this.polyPath) {
+        !finished && this.poly.setPath(this.polyPath) // 若取消编辑则将其恢复为原状
+      } else {
+        this.poly.setMap(null)
+      }
+      this.poly = null
+    }
   }
 
   stopEditMarker (toNew: boolean) {

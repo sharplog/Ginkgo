@@ -8,7 +8,8 @@
       <button @click="rmAll">删所有点线面</button>
       <button @click="createMarker">新建点</button>
       <button @click="editMarker">修改点</button>
-      <button @click="editMarker">新建线</button>
+      <button @click="createLine">新建线</button>
+      <button @click="editLine">修改线</button>
       <button @click="rmMakerLine">新建面</button>
       <button @click="rmMakerLine">新建圆</button>
       <button @click="rmMakerLine">新建矩形</button>
@@ -75,6 +76,14 @@ export default class Map extends Vue {
 
   editMarker () {
     this.editer.editMarker('mk1', this.editMarkerOpt2)
+  }
+
+  createLine () {
+    this.editer.createPolyline({})
+  }
+
+  editLine () {
+    this.editer.editPolyline('line1')
   }
 
   cancelEdit () {
