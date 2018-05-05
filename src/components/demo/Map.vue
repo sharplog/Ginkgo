@@ -10,7 +10,8 @@
       <button @click="editMarker">修改点</button>
       <button @click="createLine">新建线</button>
       <button @click="editLine">修改线</button>
-      <button @click="rmMakerLine">新建面</button>
+      <button @click="createPolygon">新建面</button>
+      <button @click="editPolygon">编辑面</button>
       <button @click="rmMakerLine">新建圆</button>
       <button @click="rmMakerLine">新建矩形</button>
       <button @click="cancelEdit">取消编辑</button>
@@ -84,6 +85,14 @@ export default class Map extends Vue {
 
   editLine () {
     this.editer.editPolyline('line1')
+  }
+
+  createPolygon () {
+    this.editer.createPolygon({fillColor: 'red'})
+  }
+
+  editPolygon () {
+    this.editer.editPolygon('gon1')
   }
 
   cancelEdit () {

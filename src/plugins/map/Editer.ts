@@ -103,6 +103,36 @@ export default class Editer {
     this.editPoly(this.poly)
   }
 
+  createPolygon (options: any) {
+    this.cancelEdit()
+
+    let data = this.getInitData()
+    let swLng = data.sw.getLng()
+    let swLat = data.sw.getLat()
+    let neLng = data.ne.getLng()
+    let neLat = data.ne.getLat()
+    options.path = [[swLng, swLat], [swLng, neLat], [neLng, neLat], [neLng, swLat]]
+    options.map = this.amap
+    this.poly = new AMap.Polygon(options)
+    this.polyPath = null
+    this.editPoly(this.poly)
+  }
+
+  editPolygon (gonId: string) {
+    this.cancelEdit()
+
+    this.poly = this.gmap.getPolygon(gonId)
+    if (!this.poly) {
+      console.error('Can not find Polygon[id: ' + gonId + ']')
+      return
+    }
+    this.polyPath = []
+    for (let pos of this.poly.getPath()) {
+      this.polyPath.push([pos.getLng(), pos.getLat()])
+    }
+    this.editPoly(this.poly)
+  }
+
   editPoly (poly: any) {
     this.polyEditor = new AMap.PolyEditor(this.amap, poly)
     this.polyEditor.on('addnode', this.handler)
