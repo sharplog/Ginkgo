@@ -142,6 +142,41 @@ export default class Editer {
     this.polyEditor.open()
   }
 
+  createCircle (options: any) {
+    this.cancelEdit()
+
+    let data = this.getInitData()
+    options.map = this.amap
+    options.center = this.amap.getCenter()
+    options.radius = data.radius
+    this.circle = new AMap.Circle(options)
+    this.circleCenter = null
+    this.circleRadius = 0
+    this.editCircle_(this.circle)
+  }
+
+  editCircle (circleId: string) {
+    this.cancelEdit()
+
+    this.circle = this.gmap.getCircle(circleId)
+    if (!this.circle) {
+      console.error('Can not find Circle[id: ' + circleId + ']')
+      return
+    }
+    let center = this.circle.getCenter()
+    this.circleCenter = new AMap.LngLat(center.getLng(), center.getLat())
+    this.circleRadius = this.circle.getRadius()
+    this.editCircle_(this.circle)
+  }
+
+  editCircle_ (circle: any) {
+    this.circleEditor = new AMap.CircleEditor(this.amap, circle)
+    this.circleEditor.on('move', this.handler)
+    this.circleEditor.on('adjust', this.handler)
+    this.circleEditor.on('end', this.handler)
+    this.circleEditor.open()
+  }
+
   getInitData () {
     let amap: any = this.gmap.getAMap()
     let center = amap.getCenter()
@@ -153,17 +188,33 @@ export default class Editer {
     let nePixel = new AMap.Pixel(x + 100, y - 60)
     let sw = amap.pixelToLngLat(swPixel, zoom)
     let ne = amap.pixelToLngLat(nePixel, zoom)
-    return { sw: sw, ne: ne, radius: center.distance(ne) }
+    return { sw: sw, ne: ne, radius: Math.round(center.distance(ne)) }
   }
 
   cancelEdit () {
     this.stopEditMarker(false)
     this.stopEditPoly(false)
+    this.stopEditCircle(false)
   }
 
   finishEdit () {
     this.stopEditMarker(true)
     this.stopEditPoly(true)
+    this.stopEditCircle(true)
+  }
+
+  stopEditMarker (toNew: boolean) {
+    if (this.posPicker) {
+      this.posPicker.stop()
+      delete this.posPicker
+
+      // 如果编辑Marker，将其移到新位置
+      if (this.marker) {
+        this.marker.show()
+        toNew && this.marker.setPosition(this.markerPosition)
+        this.marker = null
+      }
+    }
   }
 
   stopEditPoly (finished: boolean) {
@@ -181,17 +232,21 @@ export default class Editer {
     }
   }
 
-  stopEditMarker (toNew: boolean) {
-    if (this.posPicker) {
-      this.posPicker.stop()
-      delete this.posPicker
+  stopEditCircle (finished: boolean) {
+    if (this.circleEditor) {
+      this.circleEditor.close()
+      delete this.circleEditor
 
-      // 如果编辑Marker，将其移到新位置
-      if (this.marker) {
-        this.marker.show()
-        toNew && this.marker.setPosition(this.markerPosition)
-        this.marker = null
+      // 如果是对原来图形的编辑
+      if (this.circleCenter) {
+        if (!finished) {
+          this.circle.setCenter(this.circleCenter) // 若取消编辑则将其恢复为原状
+          this.circle.setRadius(this.circleRadius)
+        }
+      } else {
+        this.circle.setMap(null)
       }
+      this.circle = null
     }
   }
 }

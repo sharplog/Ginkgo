@@ -12,7 +12,8 @@
       <button @click="editLine">修改线</button>
       <button @click="createPolygon">新建面</button>
       <button @click="editPolygon">编辑面</button>
-      <button @click="rmMakerLine">新建圆</button>
+      <button @click="createCircle">新建圆</button>
+      <button @click="editCircle">修改圆</button>
       <button @click="rmMakerLine">新建矩形</button>
       <button @click="cancelEdit">取消编辑</button>
       <button @click="finishEdit">完成编辑</button>
@@ -26,7 +27,7 @@
       <button @click="clearback">清除轨迹</button>
       <!-- 画线面时，设置样式。回放时能够控制 -->
       <br/>
-      <span>【{{ poses }}| {{ address }}】</span>
+      <span>【{{ poses }}| {{ address }} | {{ radius }}】</span>
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
         :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles" :texts="texts"
@@ -71,6 +72,10 @@ export default class Map extends Vue {
     return this.editData.address
   }
 
+  get radius (): string {
+    return this.editData.radius
+  }
+
   createMarker () {
     this.editer.createMarker(this.editMarkerOpt)
   }
@@ -93,6 +98,14 @@ export default class Map extends Vue {
 
   editPolygon () {
     this.editer.editPolygon('gon1')
+  }
+
+  createCircle () {
+    this.editer.createCircle({fillColor: 'red'})
+  }
+
+  editCircle () {
+    this.editer.editCircle('circle1')
   }
 
   cancelEdit () {
