@@ -62,13 +62,16 @@ export default class Painter {
       if (option._refreshed) continue
       
       let marker = new AMap.Marker(option)
-      let size = this.getIconSize(option.icon, marker)
-      
-      marker.setOffset(new AMap.Pixel(-size.width / 2, -size.height))
+      if (option.icon) {
+        let size = this.getIconSize(option.icon, marker)
+        marker.setOffset(new AMap.Pixel(-size.width / 2, -size.height))
+      }
+
       if (option.label) {
+        let offset = marker.getOffset()
         let label = {
           content: option.label,
-          offset: new AMap.Pixel(size.width / 2, size.height)
+          offset: new AMap.Pixel(-offset.getX(), -offset.getY())
         }
         marker.setLabel(label)
       }

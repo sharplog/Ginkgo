@@ -6,11 +6,14 @@
       <button @click="setMarkers">重置点标记</button>
       <button @click="rmMakerLine">删单个点线面</button>
       <button @click="rmAll">删所有点线面</button>
-      <button @click="rmMakerLine">新建点</button>
-      <button @click="rmMakerLine">新建线</button>
+      <button @click="createMarker">新建点</button>
+      <button @click="editMarker">修改点</button>
+      <button @click="editMarker">新建线</button>
       <button @click="rmMakerLine">新建面</button>
       <button @click="rmMakerLine">新建圆</button>
       <button @click="rmMakerLine">新建矩形</button>
+      <button @click="cancelEdit">取消编辑</button>
+      <button @click="finishEdit">完成编辑</button>
       <button @click="playback">轨迹回放</button>
       <button @click="pause">暂停</button>
       <button @click="resume">继续</button>
@@ -20,10 +23,13 @@
       <button @click="speedDown">减速</button>
       <button @click="clearback">清除轨迹</button>
       <!-- 画线面时，设置样式。回放时能够控制 -->
+      <br/>
+      <span>【{{ poses }}| {{ address }}】</span>
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
         :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles" :texts="texts"
-        :trackData="trackData" :trackOptions="trackOptions" :tracker.sync="tracker">
+        :trackData="trackData" :trackOptions="trackOptions" :tracker.sync="tracker"
+        :editData.sync="editData" :editer.sync="editer">
     </ginkgo-map>
   </div>
 </template>
@@ -44,11 +50,45 @@ export default class Map extends Vue {
   center: number[] = [117.12224, 36.67429]
   tracker: any = {}
   speed: number = 500
+  editer: any = {}
+  editData: any = {}
+  editMarkerOpt: any = {}
+  editMarkerOpt2: any = {
+    mode: 'dragMarker',
+    icon: '//webapi.amap.com/ui/1.0/assets/position-picker2.png', // 图片地址
+    size: [48, 48], // 要显示的点大小，将缩放图片
+    ancher: [24, 40] // 锚点的位置，即被size缩放之后，图片的什么位置作为选中的位置
+  }
   
+  get poses (): string {
+    if (this.editData.position) return this.editData.position.join(',')
+    if (this.editData.path) return this.editData.path.join(',')
+  }
+
+  get address (): string {
+    return this.editData.address
+  }
+
+  createMarker () {
+    this.editer.createMarker(this.editMarkerOpt)
+  }
+
+  editMarker () {
+    this.editer.editMarker('mk1', this.editMarkerOpt2)
+  }
+
+  cancelEdit () {
+    this.editer.cancelEdit()
+  }
+
+  finishEdit () {
+    this.editer.finishEdit()
+  }
+
   markers: any[] = [
     { id: 'mk1',
       position: [117.12224, 36.67429],
-      icon: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
+      // icon: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
       label: '测试点1',
       title: '测试title1',
       message: '哈哈！It\'s me!',
@@ -147,6 +187,7 @@ export default class Map extends Vue {
   ]
   
   texts: any[] = [
+    /*
     {
       id: 'text1',
       text: '测试文本',
@@ -157,6 +198,7 @@ export default class Map extends Vue {
         fontSize: '20px'
       }
     }
+    */
   ]
   
   trackOptions = {

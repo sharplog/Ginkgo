@@ -8,7 +8,10 @@ import {Component, Prop, Watch, Vue} from 'vue-property-decorator'
 import GMap from './GMap'
 import Painter from './Painter'
 import Tracker from './Tracker'
-// import Editer from './Editer'
+import Editer from './Editer'
+
+let win: any = window
+let AMap: any = win.AMap
 
 @Component
 export default class GinkgoMap extends Vue {
@@ -31,6 +34,8 @@ export default class GinkgoMap extends Vue {
   @Prop() trackData: any
   @Prop() trackOptions: any
   @Prop() tracker: Tracker
+  @Prop() editData: any
+  @Prop() editer: Editer
   
   mounted () {
     let options = this.options ? this.options : {}
@@ -56,10 +61,47 @@ export default class GinkgoMap extends Vue {
     this.drawTexts()
     
     this.playback()
+
+    if (this.editData) {
+      this._editer = new Editer(this.gmap, this.syncEditData)
+      this.$emit('update:editer', this._editer)
+    }
   }
   
   destroyed () {
     this.gmap && this.gmap.destroy()
+  }
+
+  // 把编辑的数据返回给应用
+  syncEditData (result) {
+    let data: any = {}
+    if (result.position) data.position = [result.position.getLng(), result.position.getLat()]
+    if (result.address) data.address = result.address
+
+    let target = result.target
+    if (target instanceof AMap.Circle) {
+      let center = target.getCenter()
+      data.position = [center.getLng(), center.getLat()]
+      data.radius = target.getRadius()
+    }
+
+    if (target instanceof AMap.Rectangle) {
+      let sw = target.getBounds().getSouthWest()
+      let ne = target.getBounds().getNorthEast()
+      data.path = []
+      data.path.push([sw.getLng(), sw.getLat()])
+      data.path.push([ne.getLng(), ne.getLat()])
+    }
+
+    if (target instanceof AMap.Polyline || target instanceof AMap.Polygon) {
+      let path = target.getPath()
+      data.path = []
+      for (let p of path) {
+        data.path.push([p.getLng(), p.getLat()])
+      }
+    }
+
+    this.$emit('update:editData', data)
   }
   
   @Watch('trackData')
