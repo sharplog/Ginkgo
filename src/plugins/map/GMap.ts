@@ -26,7 +26,8 @@ export default class GMap {
     [Types.TYPE_POLYGON]: {},
     [Types.TYPE_CIRCLE]: {},
     [Types.TYPE_RECTANGLE]: {},
-    [Types.TYPE_TEXT]: {}
+    [Types.TYPE_TEXT]: {},
+    [Types.TYPE_IMAGELAYER]: {}
   }
     
   // 覆盖物分组，便于控制
@@ -140,12 +141,14 @@ export default class GMap {
   getPolygon = (gmapId: string) => this.getOverlays(Types.TYPE_POLYGON)[gmapId]
   getCircle = (gmapId: string) => this.getOverlays(Types.TYPE_CIRCLE)[gmapId]
   getRectangle = (gmapId: string) => this.getOverlays(Types.TYPE_RECTANGLE)[gmapId]
+  getImageLayer = (gmapId: string) => this.getOverlays(Types.TYPE_IMAGELAYER)[gmapId]
   
   removeMarker = (gmapId: string) => this.removeOverlayById(Types.TYPE_MARKER, gmapId)
   removePolyline = (gmapId: string) => this.removeOverlayById(Types.TYPE_POLYLINE, gmapId)
   removePolygon = (gmapId: string) => this.removeOverlayById(Types.TYPE_POLYGON, gmapId)
   removeCircle = (gmapId: string) => this.removeOverlayById(Types.TYPE_CIRCLE, gmapId)
   removeRectangle = (gmapId: string) => this.removeOverlayById(Types.TYPE_RECTANGLE, gmapId)
+  removeImageLayer = (gmapId: string) => this.removeOverlayById(Types.TYPE_IMAGELAYER, gmapId)
   
   destroy = () => this.amap && this.amap.destroy()
   setZoom = (zoom: number) => this.amap.setZoom(zoom)

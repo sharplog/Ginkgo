@@ -34,7 +34,7 @@
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
         :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles" :texts="texts"
         :trackData="trackData" :trackOptions="trackOptions" :tracker.sync="tracker"
-        :editData.sync="editData" :editer.sync="editer">
+        :editData.sync="editData" :editer.sync="editer" :imageLayers="imageLayers">
     </ginkgo-map>
   </div>
 </template>
@@ -248,6 +248,17 @@ export default class Map extends Vue {
     */
   ]
   
+  imageLayers: any[] = [
+    {
+      id: 'imageLayer1',
+      url: 'http://localhost:8080/static/img/dongwuyuan.jpg',
+      southWest: [116.327911, 39.939229],
+      northEast: [116.342659, 39.946275],
+      opacity: 0.7,
+      zooms: [14, 18]
+    }
+  ]
+
   trackOptions = {
     // 轨迹线的样式，默认不显示
     lineStyle: {},

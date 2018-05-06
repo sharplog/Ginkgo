@@ -7,6 +7,7 @@ export const TYPE_POLYGON = 'Polygon'
 export const TYPE_CIRCLE = 'Circle'
 export const TYPE_RECTANGLE = 'Rectangle'
 export const TYPE_TEXT = 'Text'
+export const TYPE_IMAGELAYER = 'ImageLayer'
 
 // 地图采用的坐标系
 export const COOR_WGS84 = 1
@@ -296,6 +297,29 @@ export interface TextOptions {
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string
+}
+
+export interface ImageLayerOptions {
+  // 最好要有id，且id不能重复
+  id?: string
+  
+  // 西南角坐标
+  southWest: number[]
+  
+  // 东北角坐标
+  northEast: number[]
+
+  // 图片地址
+  url: string
+
+  // 图层的透明度，[0,1]
+  opacity: number
+
+  // 层级，缺省为12
+  zIndex: number
+
+  // 可见级别，[最小级别，最大级别]
+  zooms: number[]
 }
 
 // 轨迹线上每个点的数据

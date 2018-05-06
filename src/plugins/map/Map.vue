@@ -31,6 +31,7 @@ export default class GinkgoMap extends Vue {
   @Prop() circles: any[]
   @Prop() rectangles: any[]
   @Prop() texts: any[]
+  @Prop() imageLayers: any[]
   @Prop() trackData: any
   @Prop() trackOptions: any
   @Prop() tracker: Tracker
@@ -53,6 +54,8 @@ export default class GinkgoMap extends Vue {
     })
     
     this.painter = new Painter(this.gmap)
+
+    this.drawImageLayers()
     this.drawPolygons()
     this.drawCircles()
     this.drawRectangles()
@@ -139,6 +142,11 @@ export default class GinkgoMap extends Vue {
   @Watch('texts')
   drawTexts () {
     this.painter.drawTexts(this.texts)
+  }
+  
+  @Watch('imageLayers')
+  drawImageLayers () {
+    this.painter.drawImageLayers(this.imageLayers)
   }
   
   @Watch('zoom')

@@ -147,6 +147,20 @@ export default class Painter {
       this.addOverlay(Types.TYPE_TEXT, text, option)
     }
   }
+
+  drawImageLayers (options: any[]) {
+    if (!options) return
+    
+    for (let option of options) {
+      if (!option.id) option.id = 'gmap_' + Math.random()
+      let sw = new AMap.LngLat(option.southWest[0], option.southWest[1])
+      let ne = new AMap.LngLat(option.northEast[0], option.northEast[1])
+      option.bounds = new AMap.Bounds(sw, ne)
+      
+      let image = new AMap.ImageLayer(option)
+      this.gmap.addOverlay(Types.TYPE_IMAGELAYER, image, option)
+    }
+  }
   
   addOverlay (type: string, overlay: any, option: any) {
     overlay.gmap_message = option.message
