@@ -83,17 +83,13 @@ export default class GinkgoMap extends Vue {
       let center = target.getCenter()
       data.position = [center.getLng(), center.getLat()]
       data.radius = target.getRadius()
-    }
-
-    if (target instanceof AMap.Rectangle) {
+    } else if (target instanceof AMap.Rectangle) {
       let sw = target.getBounds().getSouthWest()
       let ne = target.getBounds().getNorthEast()
       data.path = []
       data.path.push([sw.getLng(), sw.getLat()])
       data.path.push([ne.getLng(), ne.getLat()])
-    }
-
-    if (target instanceof AMap.Polyline || target instanceof AMap.Polygon) {
+    } else if (target instanceof AMap.Polyline || target instanceof AMap.Polygon) {
       let path = target.getPath()
       data.path = []
       for (let p of path) {

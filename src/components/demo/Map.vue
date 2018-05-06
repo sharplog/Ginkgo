@@ -14,7 +14,8 @@
       <button @click="editPolygon">编辑面</button>
       <button @click="createCircle">新建圆</button>
       <button @click="editCircle">修改圆</button>
-      <button @click="rmMakerLine">新建矩形</button>
+      <button @click="createRect">新建矩形</button>
+      <button @click="editRect">修改矩形</button>
       <button @click="cancelEdit">取消编辑</button>
       <button @click="finishEdit">完成编辑</button>
       <button @click="playback">轨迹回放</button>
@@ -106,6 +107,14 @@ export default class Map extends Vue {
 
   editCircle () {
     this.editer.editCircle('circle1')
+  }
+
+  createRect () {
+    this.editer.createRectangle({fillColor: 'yellow'})
+  }
+
+  editRect () {
+    this.editer.editRectangle('rect1')
   }
 
   cancelEdit () {

@@ -126,7 +126,9 @@ export default class Painter {
     
     for (let option of options) {
       if (!option.cursor) option.cursor = 'pointer'
-      option.bounds = new AMap.Bounds(option.southWest, option.northEast)
+      let sw = new AMap.LngLat(option.southWest[0], option.southWest[1])
+      let ne = new AMap.LngLat(option.northEast[0], option.northEast[1])
+      option.bounds = new AMap.Bounds(sw, ne)
       
       let rectangle = new AMap.Rectangle(option)
       this.addOverlay(Types.TYPE_RECTANGLE, rectangle, option)

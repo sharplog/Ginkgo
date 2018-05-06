@@ -31,7 +31,7 @@ export default class Editer {
   circleRadius: number
   // 被编辑的Rectangle
   rectangle: any
-  rectangleBound: any
+  rectangleBounds: any
 
   constructor (private gmap: GMap, private handler: any) {
     this.amap = gmap.getAMap()
@@ -177,6 +177,41 @@ export default class Editer {
     this.circleEditor.open()
   }
 
+  createRectangle (options: any) {
+    this.cancelEdit()
+
+    let data = this.getInitData()
+    options.map = this.amap
+    options.bounds = new AMap.Bounds(data.sw, data.ne)
+    this.rectangle = new AMap.Rectangle(options)
+    this.rectangleBounds = null
+    this.editRectangle_(this.rectangle)
+  }
+
+  editRectangle (rectangleId: string) {
+    this.cancelEdit()
+
+    this.rectangle = this.gmap.getRectangle(rectangleId)
+    if (!this.rectangle) {
+      console.error('Can not find Rectangle[id: ' + rectangleId + ']')
+      return
+    }
+    let b = this.rectangle.getBounds()
+    let sw = b.getSouthWest()
+    let ne = b.getNorthEast()
+    let sw1 = new AMap.LngLat(sw.getLng(), sw.getLat())
+    let ne1 = new AMap.LngLat(ne.getLng(), ne.getLat())
+    this.rectangleBounds = new AMap.Bounds(sw1, ne1)
+    this.editRectangle_(this.rectangle)
+  }
+
+  editRectangle_ (rectangle: any) {
+    this.rectangleEditor = new AMap.RectangleEditor(this.amap, rectangle)
+    this.rectangleEditor.on('adjust', this.handler)
+    this.rectangleEditor.on('end', this.handler)
+    this.rectangleEditor.open()
+  }
+
   getInitData () {
     let amap: any = this.gmap.getAMap()
     let center = amap.getCenter()
@@ -195,12 +230,14 @@ export default class Editer {
     this.stopEditMarker(false)
     this.stopEditPoly(false)
     this.stopEditCircle(false)
+    this.stopEditRectangle(false)
   }
 
   finishEdit () {
     this.stopEditMarker(true)
     this.stopEditPoly(true)
     this.stopEditCircle(true)
+    this.stopEditRectangle(true)
   }
 
   stopEditMarker (toNew: boolean) {
@@ -247,6 +284,27 @@ export default class Editer {
         this.circle.setMap(null)
       }
       this.circle = null
+    }
+  }
+
+  stopEditRectangle (finished: boolean) {
+    if (this.rectangleEditor) {
+      this.rectangleEditor.close()
+      delete this.rectangleEditor
+
+      // 如果是对原来图形的编辑
+      if (this.rectangleBounds) {
+        if (!finished) {
+          try { // 不知道这儿为什么会有异常，但实际没什么影响 
+            this.rectangle.setBounds(this.rectangleBounds) // 若取消编辑则将其恢复为原状
+          } catch (e) {
+            console.warn(e)
+          }
+        }
+      } else {
+        this.rectangle.setMap(null)
+      }
+      this.rectangle = null
     }
   }
 }
