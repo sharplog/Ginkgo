@@ -18,7 +18,6 @@ export default class GMap {
     typeBar: true
   }
   amap: any
-  painter: Painter
   
   // 已经画好的覆盖物
   overlays: any = {
@@ -78,7 +77,15 @@ export default class GMap {
       this.amap.addControl(new AMap.MapType(mapTypeOps))
     }
     
-    this.painter = new Painter(this)
+    /* 保留这段加载谷歌地图的例子代码
+    let googleLayer = new AMap.TileLayer({
+      zIndex: 2,
+      getTileUrl: function (x, y, z) {
+        return 'http://mt1.google.cn/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=' + x + '&y=' + y + '&z=' + z + '&s=Galil'
+      }
+    })
+    googleLayer.setMap(this.amap)
+    */
   }
   
   addOverlay = (type: string, overlay: any, option: any) => {

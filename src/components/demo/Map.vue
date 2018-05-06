@@ -4,6 +4,7 @@
       <button @click="setZoom">zoom({{ zoom }})</button>
       <button @click="setCenter">c({{ center[0] }})</button>
       <button @click="setMarkers">重置点标记</button>
+      <button @click="toggleGroup">隐藏/显示组</button>
       <button @click="rmMakerLine">删单个点线面</button>
       <button @click="rmAll">删所有点线面</button>
       <button @click="createMarker">新建点</button>
@@ -63,6 +64,7 @@ export default class Map extends Vue {
     size: [48, 48], // 要显示的点大小，将缩放图片
     ancher: [24, 40] // 锚点的位置，即被size缩放之后，图片的什么位置作为选中的位置
   }
+  showGroup: boolean = true
   
   get poses (): string {
     if (this.editData.position) return this.editData.position.join(',')
@@ -77,6 +79,11 @@ export default class Map extends Vue {
     return this.editData.radius
   }
 
+  toggleGroup () {
+    if (this.showGroup) this.gmap.hideOverlayGroup('group1')
+    else this.gmap.showOverlayGroup('group1')
+    this.showGroup = !this.showGroup
+  }
   createMarker () {
     this.editer.createMarker(this.editMarkerOpt)
   }
