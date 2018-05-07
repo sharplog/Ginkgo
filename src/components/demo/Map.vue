@@ -29,7 +29,7 @@
       <button @click="clearback">清除轨迹</button>
       <!-- 画线面时，设置样式。回放时能够控制 -->
       <br/>
-      <span>【{{ poses }}| {{ address }} | {{ radius }}】</span>
+      <span style="background: white">【{{ poses }}| {{ address }} | {{ radius }}】</span>
     </div>
     <ginkgo-map ref="map" class="gingo-map" :gmapObj.sync="gmap" :options="mapOptions" :zoom.sync="zoom" :center.sync="center"
         :markers="markers" :polylines="polylines" :polygons="polygons" :circles="circles" :rectangles="rectangles" :texts="texts"
@@ -445,7 +445,7 @@ export default class Map extends Vue {
     center: [117.12224, 36.67429],
     mapType: 0,
     scaleOffset: [40, 40],
-    scalePosition: 'LT'
+    scalePosition: 'LB'
   }
   
   setZoom () {

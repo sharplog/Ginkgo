@@ -5,13 +5,18 @@
 
 <script lang="ts">
 import {Component, Prop, Watch, Vue} from 'vue-property-decorator'
+import * as Types from './Types'
 import GMap from './GMap'
 import Painter from './Painter'
 import Tracker from './Tracker'
 import Editer from './Editer'
+import CoorConverter from './CoorConverter'
 
 let win: any = window
 let AMap: any = win.AMap
+
+// 坐标转换器
+let converter: CoorConverter = new CoorConverter(Types.COOR_GCJ02)
 
 @Component
 export default class GinkgoMap extends Vue {
@@ -78,25 +83,29 @@ export default class GinkgoMap extends Vue {
   // 把编辑的数据返回给应用
   syncEditData (result) {
     let data: any = {}
-    if (result.position) data.position = [result.position.getLng(), result.position.getLat()]
+    if (result.position) {
+      let p = converter.toWGS84R(result.position)
+      data.position = [p.lng, p.lat]
+    }
     if (result.address) data.address = result.address
 
     let target = result.target
     if (target instanceof AMap.Circle) {
-      let center = target.getCenter()
-      data.position = [center.getLng(), center.getLat()]
+      let center = converter.toWGS84R(target.getCenter())
+      data.position = [center.lng, center.lat]
       data.radius = target.getRadius()
     } else if (target instanceof AMap.Rectangle) {
-      let sw = target.getBounds().getSouthWest()
-      let ne = target.getBounds().getNorthEast()
+      let sw = converter.toWGS84R(target.getBounds().getSouthWest())
+      let ne = converter.toWGS84R(target.getBounds().getNorthEast())
       data.path = []
-      data.path.push([sw.getLng(), sw.getLat()])
-      data.path.push([ne.getLng(), ne.getLat()])
+      data.path.push([sw.lng, sw.lat])
+      data.path.push([ne.lng, ne.lat])
     } else if (target instanceof AMap.Polyline || target instanceof AMap.Polygon) {
       let path = target.getPath()
       data.path = []
       for (let p of path) {
-        data.path.push([p.getLng(), p.getLat()])
+        let pos = converter.toWGS84R(p)
+        data.path.push([pos.lng, pos.lat])
       }
     }
 
@@ -105,6 +114,7 @@ export default class GinkgoMap extends Vue {
   
   @Watch('trackData')
   playback () {
+    convertFromWGS84(this.trackData)
     if (!this._tracker) {
       let opts: any = this.trackOptions ? this.trackOptions : {}
       this._tracker = new Tracker(opts, this.gmap.getAMap(), this.trackData)
@@ -116,36 +126,43 @@ export default class GinkgoMap extends Vue {
   
   @Watch('markers')
   drawMarkers () {
+    convertFromWGS84(this.markers)
     this.painter.drawMarkers(this.markers)
   }
   
   @Watch('polylines')
   drawPolylines () {
+    convertFromWGS84(this.polylines)
     this.painter.drawPolylines(this.polylines)
   }
    
   @Watch('polygons')
   drawPolygons () {
+    convertFromWGS84(this.polygons)
     this.painter.drawPolygons(this.polygons)
   }
   
   @Watch('circles')
   drawCircles () {
+    convertFromWGS84(this.circles)
     this.painter.drawCircles(this.circles)
   }
   
   @Watch('rectangles')
   drawRectangles () {
+    convertFromWGS84(this.rectangles)
     this.painter.drawRectangles(this.rectangles)
   }
   
   @Watch('texts')
   drawTexts () {
+    convertFromWGS84(this.texts)
     this.painter.drawTexts(this.texts)
   }
   
   @Watch('imageLayers')
   drawImageLayers () {
+    convertFromWGS84(this.imageLayers)
     this.painter.drawImageLayers(this.imageLayers)
   }
   
@@ -164,6 +181,38 @@ export default class GinkgoMap extends Vue {
     this.gmap.setCenter(this.center)
   }
 }
+
+function convertFromWGS84 (obj: any) {
+  if (obj === null || typeof obj !== 'object' || obj instanceof Element) return
+
+  if (!obj.sort) {
+    for (let i in obj) {
+      if (i === 'position' || i === 'center' ||
+          i === 'southWest' || i === 'northEast') {
+        obj[i] = converter.fromWGS84A(obj[i])
+      } else if (i === 'path' && obj[i].sort && obj[i].length > 0 &&
+          typeof obj[i][0][0] === 'number') { // 坐标数组
+        for (let j = 0; j < obj[i].length; j++) {
+          obj[i][j] = converter.fromWGS84A(obj[i][j])
+        }
+      } else if (i === 'path' && obj[i].sort && obj[i].length > 0 &&
+          obj[i][0].sort && typeof obj[i][0][0][0] === 'number') { // 坐标数组的数组
+        for (let j = 0; j < obj[i].length; j++) {
+          for (let k = 0; k < obj[i][j].length; k++) {
+            obj[i][j][k] = converter.fromWGS84A(obj[i][j][k])
+          }
+        }
+      } else if (obj[i]) {
+        convertFromWGS84(obj[i])
+      }
+    }
+  } else {
+    for (let i = 0; i < obj.length; i++) {
+      convertFromWGS84(obj[i])
+    }
+  }
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
