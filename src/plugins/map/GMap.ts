@@ -135,12 +135,20 @@ export default class GMap {
     group && group.removeOverlay(overlay)
   }
   
+  dispalyOverlay = (type: string, gmapId: string, visible: boolean) => {
+    let ol = this.getOverlays(type)[gmapId]
+    if (!ol) return
+    if (visible) ol.show() 
+    else ol.hide()
+  }
+  
   getAMap = () => this.amap
   getMarker = (gmapId: string) => this.getOverlays(Types.TYPE_MARKER)[gmapId]
   getPolyline = (gmapId: string) => this.getOverlays(Types.TYPE_POLYLINE)[gmapId]
   getPolygon = (gmapId: string) => this.getOverlays(Types.TYPE_POLYGON)[gmapId]
   getCircle = (gmapId: string) => this.getOverlays(Types.TYPE_CIRCLE)[gmapId]
   getRectangle = (gmapId: string) => this.getOverlays(Types.TYPE_RECTANGLE)[gmapId]
+  getText = (gmapId: string) => this.getText(Types.TYPE_TEXT)[gmapId]
   getImageLayer = (gmapId: string) => this.getOverlays(Types.TYPE_IMAGELAYER)[gmapId]
   
   removeMarker = (gmapId: string) => this.removeOverlayById(Types.TYPE_MARKER, gmapId)
@@ -148,7 +156,16 @@ export default class GMap {
   removePolygon = (gmapId: string) => this.removeOverlayById(Types.TYPE_POLYGON, gmapId)
   removeCircle = (gmapId: string) => this.removeOverlayById(Types.TYPE_CIRCLE, gmapId)
   removeRectangle = (gmapId: string) => this.removeOverlayById(Types.TYPE_RECTANGLE, gmapId)
+  removeText = (gmapId: string) => this.removeOverlayById(Types.TYPE_TEXT, gmapId)
   removeImageLayer = (gmapId: string) => this.removeOverlayById(Types.TYPE_IMAGELAYER, gmapId)
+  
+  dispalyMarker = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_MARKER, gmapId, visible)
+  dispalyPolyline = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_POLYLINE, gmapId, visible)
+  dispalyPolygon = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_POLYGON, gmapId, visible)
+  dispalyCircle = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_CIRCLE, gmapId, visible)
+  dispalyRectangle = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_RECTANGLE, gmapId, visible)
+  dispalyText = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_TEXT, gmapId, visible)
+  dispalyImageLayer = (gmapId: string, visible: boolean) => this.dispalyOverlay(Types.TYPE_IMAGELAYER, gmapId, visible)
   
   destroy = () => this.amap && this.amap.destroy()
   setZoom = (zoom: number) => this.amap.setZoom(zoom)
