@@ -25,7 +25,7 @@ export interface MarkerOptions {
   icon?: string
   
   // 点击Marker之后弹出的信息
-  message?: string
+  message?: any
   
   // label的左上角在坐标位置点上
   label?: string
@@ -86,7 +86,7 @@ export interface PolylineOptions {
   isOutline?: boolean
   
   // 点击Marker之后弹出的信息
-  message?: string
+  message?: any
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string
@@ -142,7 +142,7 @@ export interface PolygonOptions {
   label?: string
   
   // 点击多边形之后弹出的信息
-  message?: string
+  message?: any
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string
@@ -200,7 +200,7 @@ export interface CircleOptions {
   label?: string
   
   // 点击圆之后弹出的信息
-  message?: string
+  message?: any
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string
@@ -258,7 +258,7 @@ export interface RectangleOptions {
   label?: string
   
   // 点击矩形之后弹出的信息
-  message?: string
+  message?: any
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string
@@ -293,7 +293,7 @@ export interface TextOptions {
   zIndex?: string
   
   // 点击文本之后弹出的信息
-  message?: string
+  message?: any
   
   // 所属分组，同一个组内的覆盖物可以同时显示或隐藏
   group?: string

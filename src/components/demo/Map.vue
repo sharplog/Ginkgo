@@ -79,11 +79,35 @@ export default class Map extends Vue {
     return this.editData.radius
   }
 
+  testClick (p) {
+    alert(p)
+  }
+
+  mounted () {
+    // 供在信息窗体中调用的方法
+    let win: any = window
+    win.gmapCallback = function (type) {
+      alert(type)
+    }
+  }
+
+  // 定义一个带事件的信息窗体
+  createInfo () {
+    let info = document.createElement('div')
+    let a = document.createElement('a')
+    a.innerHTML = '点击事件'
+    a.onclick = this.testClick
+    info.appendChild(a)
+ 
+    return info
+  }
+
   toggleGroup () {
     if (this.showGroup) this.gmap.hideOverlayGroup('group1')
     else this.gmap.showOverlayGroup('group1')
     this.showGroup = !this.showGroup
   }
+
   createMarker () {
     this.editer.createMarker(this.editMarkerOpt)
   }
@@ -145,6 +169,7 @@ export default class Map extends Vue {
       position: [117.32224, 36.67429],
       icon: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
       label: '测试点2',
+      message: this.createInfo(),
       group: 'group2'
     },
     { id: 'mk3',
@@ -223,7 +248,7 @@ export default class Map extends Vue {
       radius: 7000,
       strokeWeight: 2,
       cursor: 'pointer',
-      message: '哈哈！It\'s rectangle!',
+      message: '哈哈！It\'s rectangle!<br/><a href="javascript:void(0)" onClick="gmapCallback(123)">点击事件</a>',
       fillColor: 'green',
       fillOpacity: 0.5,
       strokeStyle: 'dashed',
