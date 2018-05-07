@@ -140,6 +140,7 @@ export default class Editer {
     this.polyEditor.on('removenode', this.handler)
     this.polyEditor.on('end', this.handler)
     this.polyEditor.open()
+    this.polyEditor.emit('adjust', { target: poly })
   }
 
   createCircle (options: any) {
@@ -175,6 +176,7 @@ export default class Editer {
     this.circleEditor.on('adjust', this.handler)
     this.circleEditor.on('end', this.handler)
     this.circleEditor.open()
+    this.circleEditor.emit('adjust', { target: circle })
   }
 
   createRectangle (options: any) {
@@ -210,6 +212,7 @@ export default class Editer {
     this.rectangleEditor.on('adjust', this.handler)
     this.rectangleEditor.on('end', this.handler)
     this.rectangleEditor.open()
+    this.rectangleEditor.emit('adjust', { target: rectangle })
   }
 
   getInitData () {
