@@ -30,27 +30,30 @@ http.interceptors.response.use(function (response) {
   return response
 }, function (error) {
   // Do something with response error
+  debugger
   if (error.response) {
-    /* TODO
-    if(error.response.status === 400 ){
-      window.app.$Message.error('数据错误！')
+    if (error.response.status === 400) {
+      showError(error.message ? error.message : '请求无效，可能参数错误！')
+    } else if (error.response.status === 401) {
+      showError(error.message ? error.message : '您还没有登录！')
+    } else if (error.response.status === 403) {
+      showError(error.message ? error.message : '您没有操作权限！')
+    } else if (error.response.status === 404) {
+      showError(error.message ? error.message : '访问的数据不存在！')
+    } else if (error.response.status === 500) {
+      showError(error.message ? error.message : '服务器发生了一些错误！')
     }
-    else if(error.response.status === 401 ){
-      // define window.app=vm in main.js
-      window.app.$router.push({name: 'Login'})
-    }
-    else if(error.response.status === 403 ){
-      window.app.$Message.error('您没有操作权限哦！')
-    }
-    else if(error.response.status === 404 ){
-      window.app.$Message.error('对象不存在！')
-    }
-    else if(error.response.status === 500 ){
-      window.app.$Message.error('服务器发生了一些错误哦！')
-    }
-    */
   }
   return Promise.reject(error)
 })
 
+function showError (error: string) {
+  let win: any = window
+
+  win.app.$Message.error({
+    content: error,
+    duration: 30,
+    closable: true
+  })
+}
 export default http

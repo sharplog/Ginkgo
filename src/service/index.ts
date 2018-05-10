@@ -22,13 +22,13 @@ class Service {
   }
 
   post (url, data, success, fail) {
-    return this.http.post(this.baseUrl + url,data)
+    return this.http.post(this.baseUrl + url, data)
       .then(res => success(res))
       .catch(error => handleError(error, fail))
   }
 
   put (url, data, success, fail) {
-    return this.http.put(this.baseUrl + url,data)
+    return this.http.put(this.baseUrl + url, data)
       .then(res => success(res))
       .catch(error => handleError(error, fail))
   }

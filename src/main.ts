@@ -14,9 +14,10 @@ Vue.use(iView)
 Vue.use(GinkgoMap)
 
 Vue.prototype.$service = service
+let win: any = window
 
 /* eslint-disable no-new */
-const init = new Vue({
+win.app = new Vue({
   el: '#app',
   router,
   store,
