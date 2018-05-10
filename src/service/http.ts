@@ -8,13 +8,19 @@ http.defaults.headers.post['Content-Type'] = 'application/json'
 
 // Add a request interceptor 解决ie下url带中文参数乱码问题
 http.interceptors.request.use(function (config) {
-  // Do something before request is sent
   if (config.method === 'get') {
     config.url = encodeURI(config.url)
   }
   return config
 }, function (error) {
-  // Do something with request error
+  return Promise.reject(error)
+})
+
+// 为请求添加Token
+http.interceptors.request.use(function (config) {
+  config.headers.Authorization = sessionStorage.getItem('accessToken')
+  return config
+}, function (error) {
   return Promise.reject(error)
 })
 
