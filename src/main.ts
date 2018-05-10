@@ -6,10 +6,12 @@ import router from './router'
 import store from './store'
 import iView from 'iview'
 import service from './service'
+import GinkgoMap from 'ginkgo-map'
 import 'babel-polyfill'
 
 Vue.config.productionTip = false
 Vue.use(iView)
+Vue.use(GinkgoMap)
 
 Vue.prototype.$service = service
 

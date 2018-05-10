@@ -41,14 +41,8 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
-import GinkgoMap from '../../plugins/map/Map.vue'
 
-@Component({
-  components: {
-    'ginkgo-map': GinkgoMap
-  }
-})
-
+@Component
 export default class Map extends Vue {
   gmap: any = {}
   zoom: number = 11
